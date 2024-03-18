@@ -1,0 +1,114 @@
+
+<div class="row " style="height: 100%">
+    <div class="col-2 " style="height: 100%">
+        <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 100%; height: 100%;">
+            <h2  class="my-2 mx-4">{{documentationTitle}}</h2>
+            <hr>
+            <div class="d-flex  mb-3 mb-md-0  text-white text-decoration-none">
+              <button data-bs-toggle="modal" data-bs-target="#newSectionModal" class="btn btn-outline-light">New Section</button>
+              
+            </div>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+
+              <li class="nav-item" *ngFor="let section of sections; let i = index">
+                <button (click)="selectSection(section,i)" style="width: 100%;" class="nav-link active" *ngIf="sectionAtiva == i" aria-current="page">
+                  {{section.nome}}
+                </button>
+                <button (click)="selectSection(section,i)" style="width: 100%;" class="nav-link text-white" *ngIf="sectionAtiva != i" aria-current="page">
+                  {{section.nome}}
+                </button>
+              </li>
+
+            </ul>
+            <hr>
+        </div>
+    
+    </div>
+    <div class="col mx-2">
+      <div class="my-4">
+        <div [(ngModel)]="conteudoEditor" 
+        style="max-height: 100%;"
+            [ngxSummernote]="configSummerNote"
+
+            (summernoteModelChange)="setHtmlContent($event)"  
+        ></div>
+
+        <div 
+            [ngxSummernoteView]="currentHtml"
+        ></div>
+        
+        
+      </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<!-- New Section Modal -->
+<div class="modal fade" id="newSectionModal" tabindex="-1" aria-labelledby="newSectionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="newSectionModalLabel">New Section</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="mb-3">
+                <label for="tituloNewSection" class="form-label">Titulo da Section</label>
+                <input required [(ngModel)]="nomeNovaSection" type="text" class="form-control my-2" id="tituloNewSection" placeholder="Titulo">
+                
+                <label for="selectNewSection" class="form-label">Tipo da Section</label>
+                <select required [(ngModel)]="tipoNovaSection"  class="form-select my-2"  id="selectNewSection" aria-label="Selecione um tipo">
+                    <option selected value="1">Documentação Padrão</option>
+                    <option value="2">Dicionario de Dados</option>
+                </select>
+
+                <div *ngIf="tipoNovaSection == '2'">
+                    <div class="input-group flex-nowrap my-2">
+                        <span class="input-group-text" id="addon-wrapping">🙋</span>
+                        <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping">
+                        
+                        <span class="input-group-text" id="addon-wrapping">🔑</span>
+                        <input type="text" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="addon-wrapping">
+                       
+                        
+                    </div>
+                    <div class="input-group flex-nowrap my-2">
+                        
+                        <span class="input-group-text" id="addon-wrapping">🏠</span>
+                        <input type="text" class="form-control" placeholder="Host" aria-label="Host" aria-describedby="addon-wrapping">
+
+                        <span class="input-group-text" id="addon-wrapping">🚪</span>
+                        <input type="text" class="form-control" placeholder="Port" aria-label="Port" aria-describedby="addon-wrapping">
+                    </div>
+                    <div class="input-group flex-nowrap my-2">
+
+                        <label class="input-group-text" for="sgbdSelection">Sgbd</label>
+                        <select class="form-select" id="sgbdSelection">
+                          <option selected>Choose...</option>
+                          <option value="1">Sql Server</option>
+                          <option value="2">Postgres</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" (click)="createSection()" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
