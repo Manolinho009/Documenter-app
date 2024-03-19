@@ -10,14 +10,18 @@ import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './components/home/home.component';
 import { NewDocumentationComponent } from './components/documentation/new-documentation/new-documentation.component';
 import { EditDocumentationComponent } from './components/documentation/edit-documentation/edit-documentation.component';
+import { EditTableComponent } from './components/documentation/edit-documentation/edit-table/edit-table.component';
+import { ViewDocumentationComponent } from './components/documentation/view-documentation/view-documentation.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     NewDocumentationComponent,
-    EditDocumentationComponent
-  ],
+    EditDocumentationComponent,
+    EditTableComponent,
+    ViewDocumentationComponent
+    ],
   imports: [
     BrowserModule,
     AppRoutingModule,

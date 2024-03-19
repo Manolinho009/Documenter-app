@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { EditTableComponent } from './edit-table/edit-table.component';
 
 @Component({
   selector: 'app-edit-documentation',
@@ -7,9 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EditDocumentationComponent implements OnInit{
 
+  
+  @ViewChildren(EditTableComponent) editTableComponents!: QueryList<EditTableComponent>;
+  sectionTables:any[] = []
+  sectionTableNameAtual:any = ''
+
+
   documentationTitle:any = ''
 
   sectionAtiva:number = 9999
+  tipoSectionAtiva:any = ''
   sections:any[] = []
 
   tipoNovaSection:any = ''
@@ -36,8 +44,16 @@ export class EditDocumentationComponent implements OnInit{
 
   conteudoEditor:any = ''
 
+
+
+  exportar(){
+    
+
+  }
+
+
   createSection(){
-    this.sections.push({tipo: this.tipoNovaSection, nome: this.nomeNovaSection, html:''})
+    this.sections.push({tipo: this.tipoNovaSection, nome: this.nomeNovaSection, html:'', tables:[]})
     this.loadDocumentacao.sections = this.sections
     
     localStorage.setItem('novaDocumentacao',JSON.stringify(this.loadDocumentacao))
@@ -49,6 +65,8 @@ export class EditDocumentationComponent implements OnInit{
     this.sectionAtiva = index;
     this.currentHtml = section.nome+' - '+section.html;
     this.conteudoEditor = section.html
+    this.tipoSectionAtiva = section.tipo
+    this.sectionTables = section.tables
   }
 
 
@@ -60,11 +78,64 @@ export class EditDocumentationComponent implements OnInit{
     const ativa = this.sectionAtiva
 
     this.sections[ativa].html = event
+    this.sections[ativa].tables = this.sectionTables
+
     this.loadDocumentacao.sections = this.sections
-    
+
     localStorage.setItem('novaDocumentacao',JSON.stringify(this.loadDocumentacao))
 
   }
+
+  deleteTable(index:any){
+    
+    const ativa = this.sectionAtiva
+    this.sectionTables.splice(index,1)
+
+    this.sections[ativa].tables = this.sectionTables
+
+    this.loadDocumentacao.sections = this.sections
+    localStorage.setItem('novaDocumentacao',JSON.stringify(this.loadDocumentacao))
+  }
+
+  addTabela(){
+    const now = new Date();
+    
+    this.sectionTables.push(
+      {
+        colunas:[],
+        titulo:this.sectionTableNameAtual,
+        dh_alteracao: now.toLocaleTimeString()
+      }
+    )
+
+    const ativa = this.sectionAtiva
+    this.sections[ativa].tables = this.sectionTables
+
+    this.loadDocumentacao.sections = this.sections
+
+    localStorage.setItem('novaDocumentacao',JSON.stringify(this.loadDocumentacao))
+
+
+  }
+
+  editTabelas(colunas:any){
+    console.log(colunas);
+    
+    this.editTableComponents.forEach(editTableComponent => {
+      this.sectionTables[editTableComponent.index].colunas = colunas
+    });
+
+    
+    const ativa = this.sectionAtiva
+    this.sections[ativa].tables = this.sectionTables
+
+    this.loadDocumentacao.sections = this.sections
+
+    localStorage.setItem('novaDocumentacao',JSON.stringify(this.loadDocumentacao))
+
+  
+  }
+
   ngOnInit(): void {
     
     const valorLocalStorage = localStorage.getItem('novaDocumentacao')

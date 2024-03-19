@@ -1,0 +1,70 @@
+<div class="card text-center my-3">
+    <div class="card-header">
+      {{titulo}}
+      
+      <button *ngIf="!viewOnly" (click)="deleteThisTable()">
+        <i class="bi bi-trash3-fill" style="color: red;"></i>
+      </button>
+    </div>
+    <div class="card-body">
+      
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Coluna</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Descrição</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr *ngFor="let col of colunas; let i = index">
+            
+            
+            <th scope="row">
+              <span *ngIf="!editMode && !viewOnly" 
+                (dblclick)="enableEditMode(i)">
+                    {{col.nome}}
+              </span>
+              <span *ngIf="viewOnly">
+                    {{col.nome}}
+              </span>
+              <input class="inputEditTable" *ngIf="editMode" type="text" [value]="col.nome" (blur)="disableEditMode({nome:$event})" (keyup.enter)="saveChanges({nome:$event})">
+            </th>
+            <td>
+              <span *ngIf="!editMode && !viewOnly" 
+                (dblclick)="enableEditMode(i)">
+                    {{col.tipo}}
+              </span>
+              <span *ngIf="viewOnly">
+                    {{col.tipo}}
+              </span>
+              <input class="inputEditTable" *ngIf="editMode" type="text" [value]="col.tipo" (blur)="disableEditMode({tipo:$event})" (keyup.enter)="saveChanges({tipo:$event})">
+            </td>
+            <td>
+              <span *ngIf="!editMode && !viewOnly" 
+                (dblclick)="enableEditMode(i)">
+                {{col.descricao}}
+              </span>
+              <span *ngIf="viewOnly">
+                {{col.descricao}}
+              </span>
+              <input class="inputEditTable" *ngIf="editMode" type="text" [value]="col.descricao" (blur)="disableEditMode({descricao:$event})" (keyup.enter)="saveChanges({descricao:$event})">
+              
+            </td>
+          </tr>
+
+          <tr *ngIf="!editMode && !viewOnly">
+            <th scope="row"><input [(ngModel)]="coluna.nome" class="inputEditTable" type="text"></th>
+            <td><input [(ngModel)]="coluna.tipo" class="inputEditTable" type="text"></td>
+            <td><input [(ngModel)]="coluna.descricao" class="inputEditTable" type="text"></td>
+            <button (click)="addColuna()"><i class="bi bi-check-lg" style="color: #1ad38c;"></i></button>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+    <div class="card-footer text-body-secondary">
+      {{dh_alteracao}}
+    </div>
+  </div>

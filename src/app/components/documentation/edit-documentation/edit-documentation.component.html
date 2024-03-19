@@ -1,8 +1,9 @@
 
 <div class="row " style="height: 100%">
-    <div class="col-2 " style="height: 100%">
+    <div class="col-3 " style="height: 100%">
         <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 100%; height: 100%;">
-            <h2  class="my-2 mx-4">{{documentationTitle}}</h2>
+            <h4  class="my-2 mx-4">{{documentationTitle}}  <i class="bi bi-download mx-2" (click)="exportar()" style="cursor: pointer;"></i></h4>
+
             <hr>
             <div class="d-flex  mb-3 mb-md-0  text-white text-decoration-none">
               <button data-bs-toggle="modal" data-bs-target="#newSectionModal" class="btn btn-outline-light">New Section</button>
@@ -26,7 +27,8 @@
     
     </div>
     <div class="col mx-2">
-      <div class="my-4">
+
+      <div class="my-4" *ngIf="tipoSectionAtiva == '1'">
         <div [(ngModel)]="conteudoEditor" 
         style="max-height: 100%;"
             [ngxSummernote]="configSummerNote"
@@ -37,9 +39,55 @@
         <div 
             [ngxSummernoteView]="currentHtml"
         ></div>
-        
-        
       </div>
+
+      <div class="my-4" *ngIf="tipoSectionAtiva == '2'">
+        <nav class="navbar rounded" style="background-color: #e3f2fd;">
+          <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">Opçoes</span>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <div class="input-group mt-3">
+                    <input [(ngModel)]="sectionTableNameAtual" type="text" class="form-control" placeholder="Nome da Tabela" aria-label="Nome da Tabela" aria-describedby="button-addon2">
+                    <button (click)="addTabela()" class="btn btn-outline-secondary" type="button" id="button-addon2">Add Tabela</button>
+                  </div>
+                </li>
+<!--                 
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Features</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Pricing</a>
+                </li> -->
+                
+              </ul>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="container-fluid mt-3">
+
+          <app-edit-table 
+          (onAddColumn)="editTabelas($event)"
+          (onDeleteTable)="deleteTable($event)"
+
+          *ngFor="let slt of sectionTables; let i = index" 
+          [index]="i" 
+          [titulo]="slt.titulo" 
+          [dh_alteracao]="slt.dh_alteracao"
+          [colunas]="slt.colunas"
+
+          ></app-edit-table>
+
+        </div>
+
+      </div>
+
+
     </div>
 </div>
 
