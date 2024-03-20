@@ -1,5 +1,8 @@
-import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { EditTableComponent } from './edit-table/edit-table.component';
+import { DownloadPageService } from '../../../services/download-page.service';
+import { StorageAcessService } from '../../../services/storage-acess.service';
+import { ViewDocumentationComponent } from '../view-documentation/view-documentation.component';
 
 @Component({
   selector: 'app-edit-documentation',
@@ -8,6 +11,9 @@ import { EditTableComponent } from './edit-table/edit-table.component';
 })
 export class EditDocumentationComponent implements OnInit{
 
+  @Output() onUpdateStorage: EventEmitter<any> = new EventEmitter();
+
+  @ViewChildren(ViewDocumentationComponent) viewDocumentationComponents!: QueryList<ViewDocumentationComponent>;
   
   @ViewChildren(EditTableComponent) editTableComponents!: QueryList<EditTableComponent>;
   sectionTables:any[] = []
@@ -45,10 +51,10 @@ export class EditDocumentationComponent implements OnInit{
   conteudoEditor:any = ''
 
 
+  constructor(private downloadPageService:DownloadPageService,private storageAcessService:StorageAcessService ){}
 
   exportar(){
-    
-
+    this.downloadPageService.salvarHTML()
   }
 
 
@@ -56,8 +62,7 @@ export class EditDocumentationComponent implements OnInit{
     this.sections.push({tipo: this.tipoNovaSection, nome: this.nomeNovaSection, html:'', tables:[]})
     this.loadDocumentacao.sections = this.sections
     
-    localStorage.setItem('novaDocumentacao',JSON.stringify(this.loadDocumentacao))
-
+    this.updateStorage()
   }
 
 
@@ -82,8 +87,7 @@ export class EditDocumentationComponent implements OnInit{
 
     this.loadDocumentacao.sections = this.sections
 
-    localStorage.setItem('novaDocumentacao',JSON.stringify(this.loadDocumentacao))
-
+    this.updateStorage()
   }
 
   deleteTable(index:any){
@@ -94,8 +98,7 @@ export class EditDocumentationComponent implements OnInit{
     this.sections[ativa].tables = this.sectionTables
 
     this.loadDocumentacao.sections = this.sections
-    localStorage.setItem('novaDocumentacao',JSON.stringify(this.loadDocumentacao))
-  }
+    this.updateStorage()  }
 
   addTabela(){
     const now = new Date();
@@ -113,8 +116,7 @@ export class EditDocumentationComponent implements OnInit{
 
     this.loadDocumentacao.sections = this.sections
 
-    localStorage.setItem('novaDocumentacao',JSON.stringify(this.loadDocumentacao))
-
+    this.updateStorage()
 
   }
 
@@ -131,25 +133,25 @@ export class EditDocumentationComponent implements OnInit{
 
     this.loadDocumentacao.sections = this.sections
 
-    localStorage.setItem('novaDocumentacao',JSON.stringify(this.loadDocumentacao))
+    this.updateStorage()
+  }
 
-  
+
+
+  updateStorage(){
+    this.storageAcessService.updateStorage(this.loadDocumentacao)
+    this.onUpdateStorage.emit(this.loadDocumentacao)
+
+    this.viewDocumentationComponents.forEach(viewDocumentationComponent => {
+      viewDocumentationComponent.reload()
+    });
   }
 
   ngOnInit(): void {
     
-    const valorLocalStorage = localStorage.getItem('novaDocumentacao')
-
-    if (valorLocalStorage) {
-      this.loadDocumentacao = JSON.parse(valorLocalStorage);
-
-      this.sections = this.loadDocumentacao.sections
-      this.documentationTitle = this.loadDocumentacao.titulo
-
-      console.log('Objeto do localStorage:', this.loadDocumentacao);
-    } else {
-      console.log('Nenhum valor encontrado no localStorage.');
-    }
+    this.loadDocumentacao = this.storageAcessService.changeStorage()
+    this.sections = this.loadDocumentacao.sections
+    this.documentationTitle = this.loadDocumentacao.titulo
   }
 
 

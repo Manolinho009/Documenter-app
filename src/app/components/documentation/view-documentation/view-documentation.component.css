@@ -10,7 +10,7 @@ body {
     box-sizing: border-box;
 }
 
-a{
+a, .navigationLink{
     -webkit-transition: all .3s ease;
     -moz-transition: all .3s ease;
     -o-transition: all .3s ease;
@@ -251,18 +251,23 @@ aside h4{
 .menu-box li{
     display:block;
 }
-.menu-box li a{
+.menu-box li .navigationLink{
     display:block;
     padding:15px 20px;
-    margin-left: -20px;
     margin-right: -20px;
     color:#fff;
     border-bottom:1px solid #314559;
 }
-.menu-box li a:hover, .menu-box li a.current{
+.menu-box li .navigationLink:hover, .menu-box li .navigationLink.current{
     background:#2c3e50;
 }
-.menu-box li:last-child a{
+
+.menu-box .navigationLink{
+    background:#3f5368;
+    width: 100%;
+    border: none;
+}
+.menu-box li:last-child .navigationLink{
     border-bottom:0;
 }
 

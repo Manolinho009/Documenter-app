@@ -25,10 +25,9 @@ export class AppComponent {
     fontNames: ['Helvetica', 'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Roboto', 'Times']
   }
 
-
-
   eventTester(event:any){
+    console.log('papaap');
     console.log(event);
-    this.htmlContent = event;
+
   }
 }
