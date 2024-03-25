@@ -1,11 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+
+
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
+
   title = 'Documenter-app';
   htmlContent:any = '';
 
@@ -23,6 +26,11 @@ export class AppComponent {
         ['insert', ['table', 'picture', 'link', 'video', 'hr']]
     ],
     fontNames: ['Helvetica', 'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Roboto', 'Times']
+  }
+
+
+  ngOnInit(): void {
+    
   }
 
   eventTester(event:any){

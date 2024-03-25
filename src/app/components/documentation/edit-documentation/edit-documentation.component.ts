@@ -20,7 +20,9 @@ export class EditDocumentationComponent implements OnInit{
   sectionTableNameAtual:any = ''
 
 
+  documentationVersion:any = 0
   documentationTitle:any = ''
+  documentationCommitText:any = ''
 
   sectionAtiva:number = 9999
   tipoSectionAtiva:any = ''
@@ -54,12 +56,25 @@ export class EditDocumentationComponent implements OnInit{
   constructor(private downloadPageService:DownloadPageService,private storageAcessService:StorageAcessService ){}
 
   exportar(){
+    this.sections.forEach((sec,i)=>{
+      this.sections[i].changes = 0
+    })
+    this.loadDocumentacao.version = this.documentationVersion + 1;
+    this.loadDocumentacao.commitText = this.documentationCommitText
+    
+    this.updateStorage()
     this.downloadPageService.salvarHTML()
   }
 
 
   createSection(){
-    this.sections.push({tipo: this.tipoNovaSection, nome: this.nomeNovaSection, html:'', tables:[]})
+    this.sections.push({
+        tipo: this.tipoNovaSection
+        , nome: this.nomeNovaSection
+        , html:''
+        , tables:[]
+        , changes:1
+      })
     this.loadDocumentacao.sections = this.sections
     
     this.updateStorage()
@@ -84,6 +99,7 @@ export class EditDocumentationComponent implements OnInit{
 
     this.sections[ativa].html = event
     this.sections[ativa].tables = this.sectionTables
+    this.sections[ativa].changes = 1
 
     this.loadDocumentacao.sections = this.sections
 
@@ -96,6 +112,7 @@ export class EditDocumentationComponent implements OnInit{
     this.sectionTables.splice(index,1)
 
     this.sections[ativa].tables = this.sectionTables
+    this.sections[ativa].changes = 1
 
     this.loadDocumentacao.sections = this.sections
     this.updateStorage()  }
@@ -113,6 +130,7 @@ export class EditDocumentationComponent implements OnInit{
 
     const ativa = this.sectionAtiva
     this.sections[ativa].tables = this.sectionTables
+    this.sections[ativa].changes = 1
 
     this.loadDocumentacao.sections = this.sections
 
@@ -130,6 +148,7 @@ export class EditDocumentationComponent implements OnInit{
     
     const ativa = this.sectionAtiva
     this.sections[ativa].tables = this.sectionTables
+    this.sections[ativa].changes = 1
 
     this.loadDocumentacao.sections = this.sections
 
@@ -152,6 +171,7 @@ export class EditDocumentationComponent implements OnInit{
     this.loadDocumentacao = this.storageAcessService.changeStorage()
     this.sections = this.loadDocumentacao.sections
     this.documentationTitle = this.loadDocumentacao.titulo
+    this.documentationVersion = parseFloat(this.loadDocumentacao.version)
   }
 
 

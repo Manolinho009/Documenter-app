@@ -3,7 +3,10 @@ export class Documentation {
     titulo:any = ''
     sections:any = []
 
-    version:any = ''
+    commitText:any = ''
+    sectionsChanges:any[] = []
+
+    version:any = 0
     status:any = 0
 
 

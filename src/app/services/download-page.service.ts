@@ -20,13 +20,32 @@ export class DownloadPageService {
       var scripts = `
         <!-- Inclua aqui os scripts necessários, como Angular e scripts personalizados -->
         <script>
+        function getRouteParam(paramName) {
+          const urlParams = new URLSearchParams(window.location.search);
+          return urlParams.get(paramName);
+        }
+        function scrollToId(id) {
+          var element = document.getElementById(id);
+          if (element) {
+              element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
+
+        
         document.addEventListener('DOMContentLoaded', function() {
+            
             var buttons = document.querySelectorAll('button[aria-label]');
             buttons.forEach(function(button) {
                 button.addEventListener('click', function() {
                     scrollToElement(this);
                 });
             });
+
+            var goTo = getRouteParam('to')
+            if(goTo){
+              scrollToId(goTo)
+            }
+            
         });
         
         function scrollToElement(btn) {
@@ -38,6 +57,7 @@ export class DownloadPageService {
                 }
             }
         }
+        
         </script>
         `;
       var styles = `

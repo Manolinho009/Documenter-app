@@ -27,6 +27,7 @@
     "ngx-summernote": "^1.0.0",
     "puppeteer": "^22.6.0",
     "rxjs": "~7.8.0",
+    "simple-git": "^3.23.0",
     "summernote": "^0.8.20",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"
