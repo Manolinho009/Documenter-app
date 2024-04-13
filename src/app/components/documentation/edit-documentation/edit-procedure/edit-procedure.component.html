@@ -8,27 +8,59 @@
   "
 >
   <div class="card-header">
-    {{ titulo }}
+    <span
+      *ngIf="!editMode && !viewOnly"
+      (dblclick)="enableEditModeDescricaoTitulo('titulo')"
+    >
+      {{ titulo }}
+    </span>
+    <span *ngIf="viewOnly">
+      {{ titulo }}
+    </span>
+    <input
+      class="inputEditTable"
+      *ngIf="editMode"
+      type="text"
+      [value]="titulo"
+      (blur)="disableEditMode({ titulo: $event })"
+      (keyup.enter)="saveChanges({ titulo: $event })"
+    />
     <button *ngIf="!viewOnly" (click)="deleteThisTable()">
       <i class="bi bi-trash3-fill" style="color: red"></i>
     </button>
-    <hr *ngIf="descricaoTabela" />
-    <p>{{ descricaoTabela }}</p>
+    <hr *ngIf="descricaoProcedure" />
+
+    <span
+      *ngIf="!editMode && !viewOnly"
+      (dblclick)="enableEditModeDescricaoTitulo('desc')"
+    >
+      {{ descricaoProcedure }}
+    </span>
+    <span *ngIf="viewOnly">
+      {{ descricaoProcedure }}
+    </span>
+    <textarea
+      class="inputEditTable"
+      *ngIf="editMode"
+      type="text"
+      [value]="descricaoProcedure"
+      (blur)="disableEditMode({ descricaoProcedure: $event })"
+      (keyup.enter)="saveChanges({ descricaoProcedure: $event })"
+    ></textarea>
   </div>
   <div class="card-body" style="max-width: 100%; overflow-x: auto">
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">Nome Coluna</th>
-          <th scope="col">Tipo de Dados</th>
-          <th scope="col">Formato</th>
+          <th scope="col">&#64;Parametros</th>
+          <th scope="col">Tipo da entrada</th>
           <th scope="col">Tamanho</th>
           <th scope="col">Descrição</th>
           <th scope="col">Exemplo*</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let col of colunas; let i = index">
+        <tr *ngFor="let col of params; let i = index">
           <th scope="row">
             <span *ngIf="!editMode && !viewOnly" (dblclick)="enableEditMode(i)">
               {{ col.nome }}
@@ -61,22 +93,7 @@
               (keyup.enter)="saveChanges({ tipo: $event })"
             />
           </td>
-          <td>
-            <span *ngIf="!editMode && !viewOnly" (dblclick)="enableEditMode(i)">
-              {{ col.formato }}
-            </span>
-            <span *ngIf="viewOnly">
-              {{ col.formato }}
-            </span>
-            <input
-              class="inputEditTable"
-              *ngIf="editMode"
-              type="text"
-              [value]="col.formato"
-              (blur)="disableEditMode({ formato: $event })"
-              (keyup.enter)="saveChanges({ formato: $event })"
-            />
-          </td>
+
           <td>
             <span *ngIf="!editMode && !viewOnly" (dblclick)="enableEditMode(i)">
               {{ col.tamanho }}
@@ -126,7 +143,7 @@
             />
           </td>
 
-          <button style="border: none" (click)="dellColuna(i)">
+          <button style="border: none" (click)="dellParam(i)">
             <i class="bi bi-trash3-fill" style="color: #d31a1a"></i>
           </button>
         </tr>
@@ -134,48 +151,42 @@
         <tr *ngIf="!editMode && !viewOnly">
           <th scope="row">
             <input
-              [(ngModel)]="coluna.nome"
+              [(ngModel)]="param.nome"
               class="inputEditTable"
               type="text"
             />
           </th>
           <td>
             <input
-              [(ngModel)]="coluna.tipo"
-              class="inputEditTable"
-              type="text"
-            />
-          </td>
-          <td>
-            <input
-              [(ngModel)]="coluna.formato"
-              class="inputEditTable"
-              type="text"
-            />
-          </td>
-          <td>
-            <input
-              [(ngModel)]="coluna.tamanho"
-              class="inputEditTable"
-              type="text"
-            />
-          </td>
-          <td>
-            <input
-              [(ngModel)]="coluna.descricao"
-              class="inputEditTable"
-              type="text"
-            />
-          </td>
-          <td>
-            <input
-              [(ngModel)]="coluna.exemplo"
+              [(ngModel)]="param.tipo"
               class="inputEditTable"
               type="text"
             />
           </td>
 
-          <button (click)="addColuna()">
+          <td>
+            <input
+              [(ngModel)]="param.tamanho"
+              class="inputEditTable"
+              type="text"
+            />
+          </td>
+          <td>
+            <input
+              [(ngModel)]="param.descricao"
+              class="inputEditTable"
+              type="text"
+            />
+          </td>
+          <td>
+            <input
+              [(ngModel)]="param.exemplo"
+              class="inputEditTable"
+              type="text"
+            />
+          </td>
+
+          <button style="border: none" (click)="addParam()">
             <i class="bi bi-check-lg" style="color: #1ad38c"></i>
           </button>
         </tr>

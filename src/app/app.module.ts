@@ -12,6 +12,7 @@ import { NewDocumentationComponent } from './components/documentation/new-docume
 import { EditDocumentationComponent } from './components/documentation/edit-documentation/edit-documentation.component';
 import { EditTableComponent } from './components/documentation/edit-documentation/edit-table/edit-table.component';
 import { ViewDocumentationComponent } from './components/documentation/view-documentation/view-documentation.component';
+import { EditProcedureComponent } from './components/documentation/edit-documentation/edit-procedure/edit-procedure.component';
 
 
 
@@ -22,7 +23,8 @@ import { ViewDocumentationComponent } from './components/documentation/view-docu
     NewDocumentationComponent,
     EditDocumentationComponent,
     EditTableComponent,
-    ViewDocumentationComponent
+    ViewDocumentationComponent,
+    EditProcedureComponent
     ],
   imports: [
     BrowserModule,

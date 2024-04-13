@@ -3,6 +3,7 @@ import { EditTableComponent } from './edit-table/edit-table.component';
 import { DownloadPageService } from '../../../services/download-page.service';
 import { StorageAcessService } from '../../../services/storage-acess.service';
 import { ViewDocumentationComponent } from '../view-documentation/view-documentation.component';
+import { EditProcedureComponent } from './edit-procedure/edit-procedure.component';
 declare const bootstrap: any; 
 
 @Component({
@@ -17,8 +18,12 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
   @ViewChildren(ViewDocumentationComponent) viewDocumentationComponents!: QueryList<ViewDocumentationComponent>;
   
   @ViewChildren(EditTableComponent) editTableComponents!: QueryList<EditTableComponent>;
+  @ViewChildren(EditProcedureComponent) editProcedureComponents!: QueryList<EditProcedureComponent>;
   sectionTables:any[] = []
+  sectionProcedures:any[] = []
+
   sectionTableNameAtual:any = ''
+  sectionTableDescAtual:any = ''
 
 
   documentationVersion:any = 0
@@ -97,6 +102,7 @@ focus: any;
         , nome: this.nomeNovaSection
         , html:''
         , tables:[]
+        , procedures:[]
         , changes:1
       })
     this.loadDocumentacao.sections = this.sections
@@ -111,6 +117,7 @@ focus: any;
     this.conteudoEditor = section.html
     this.tipoSectionAtiva = section.tipo
     this.sectionTables = section.tables
+    this.sectionProcedures = section.procedures
   }
 
 
@@ -123,6 +130,7 @@ focus: any;
 
     this.sections[ativa].html = event
     this.sections[ativa].tables = this.sectionTables
+    this.sections[ativa].procedures = this.sectionProcedures
     this.sections[ativa].changes = 1
 
     this.loadDocumentacao.sections = this.sections
@@ -141,6 +149,17 @@ focus: any;
     this.loadDocumentacao.sections = this.sections
     this.updateStorage()  }
 
+  deleteProcedures(index:any){
+    
+    const ativa = this.sectionAtiva
+    this.sectionProcedures.splice(index,1)
+
+    this.sections[ativa].procedures = this.sectionProcedures
+    this.sections[ativa].changes = 1
+
+    this.loadDocumentacao.sections = this.sections
+    this.updateStorage()  }
+
   addTabela(){
     const now = new Date();
     
@@ -148,7 +167,8 @@ focus: any;
       {
         colunas:[],
         titulo:this.sectionTableNameAtual,
-        dh_alteracao: now.toLocaleTimeString()
+        descricao:this.sectionTableDescAtual,
+        dh_alteracao: now.toLocaleString()
       }
     )
 
@@ -161,17 +181,85 @@ focus: any;
     this.updateStorage()
 
   }
+  addProcedure(){
+    const now = new Date();
+    
+    this.sectionProcedures.push(
+      {
+        params:[],
+        titulo:this.sectionTableNameAtual,
+        descricao:this.sectionTableDescAtual,
+        dh_alteracao: now.toLocaleString()
+      }
+    )
 
-  editTabelas(colunas:any){
-    console.log(colunas);
+    const ativa = this.sectionAtiva
+    this.sections[ativa].procedures = this.sectionProcedures
+    this.sections[ativa].changes = 1
+
+    this.loadDocumentacao.sections = this.sections
+
+    this.updateStorage()
+
+  }
+
+  editTabelas(table:any){
+
+    console.log(table);
     
     this.editTableComponents.forEach(editTableComponent => {
-      this.sectionTables[editTableComponent.index].colunas = colunas
+      
+      if( editTableComponent.index == table.index ) {
+        this.sectionProcedures[editTableComponent.index].descricaoTabela = table.descricaoTabela
+        this.sectionProcedures[editTableComponent.index].titulo = table.titulo
+        this.sectionProcedures[editTableComponent.index].colunas = table.colunas
+        this.sectionProcedures[editTableComponent.index].dh_alteracao = table.dh_alteracao
+      }
+    });
+
+    const ativa = this.sectionAtiva
+    this.sections[ativa].tables = this.sectionTables
+    this.sections[ativa].changes = 1
+
+    this.loadDocumentacao.sections = this.sections
+
+    this.updateStorage()
+  }
+  
+  // editProcedures(params:any){
+  //   console.log(params);
+  //   // ===
+  //   this.editProcedureComponents.forEach(editProcedureComponent => {
+  //     this.sectionProcedures[editProcedureComponent.index].params = params
+  //   });
+
+    
+  //   const ativa = this.sectionAtiva
+  //   this.sections[ativa].procedures = this.sectionProcedures
+  //   this.sections[ativa].changes = 1
+
+  //   this.loadDocumentacao.sections = this.sections
+
+  //   this.updateStorage()
+  // }
+
+
+  editProcedures(procedure:any){
+    console.log(procedure);
+    // ===
+    this.editProcedureComponents.forEach(editProcedureComponent => {
+      
+      if( editProcedureComponent.index == procedure.index ) {
+        this.sectionProcedures[editProcedureComponent.index].descricaoProcedure = procedure.descricaoProcedure
+        this.sectionProcedures[editProcedureComponent.index].params = procedure.params
+        this.sectionProcedures[editProcedureComponent.index].titulo = procedure.titulo
+        this.sectionProcedures[editProcedureComponent.index].dh_alteracao = procedure.dh_alteracao
+      }
     });
 
     
     const ativa = this.sectionAtiva
-    this.sections[ativa].tables = this.sectionTables
+    this.sections[ativa].procedures = this.sectionProcedures
     this.sections[ativa].changes = 1
 
     this.loadDocumentacao.sections = this.sections
@@ -218,4 +306,7 @@ focus: any;
     
     // Fecha o popover após 5 segundos
   }
+
+
+
 }

@@ -1,51 +1,155 @@
-
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
     <title>titi</title>
-    
-    <meta name="format-detection" content="telephone=no">
-	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
- 
-</head>
-<body >
 
+    <meta name="format-detection" content="telephone=no" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=latin,cyrillic"
+      rel="stylesheet"
+      type="text/css"
+    />
+  </head>
+  <body>
+    <section class="content">
+      <div class="container">
+        <div class="content-wrap">
+          <div class="row">
+            <aside>
+              <div class="menu-box">
+                <h4>Navegação</h4>
+                <nav>
+                  <ul>
+                    <li *ngFor="let section of sections; let i = index">
+                      <button
+                        class="navigationLink my-2"
+                        (click)="scrollToElement(section.nome)"
+                        [ariaLabel]="section.nome"
+                        style="cursor: pointer"
+                      >
+                        {{ section.nome }}
+                      </button>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </aside>
+            <div class="content-info">
+              <div
+                *ngFor="let section of sections; let i = index"
+                class="section-txt"
+                id="{{ section.nome }}"
+              >
+                <div
+                  *ngIf="section.tipo == '1'"
+                  [ngxSummernoteView]="section.html"
+                ></div>
 
-	<section class="content" >
-		<div class="container">
-			<div class="content-wrap">
-				<div class="row">
-					<aside>
-						<div class="menu-box ">
-							<h4>Navegação</h4>	
-							<nav>
-								<ul>
-									<li *ngFor="let section of sections; let i = index">
-										<button class="navigationLink my-2"  (click)="scrollToElement(section.nome)"  [ariaLabel]="section.nome"  style="cursor: pointer;" >{{section.nome}}</button>
-									</li>
-									
-								</ul>					
-							</nav>
-						</div>
-					</aside>
-					<div class="content-info">
-
-						<div  *ngFor="let section of sections; let i = index" class="section-txt" id="{{section.nome}}">
-							<div *ngIf="section.tipo == '1'"
-							[ngxSummernoteView]="section.html"
-							></div>
-
-							<div *ngIf="section.tipo == '2'"  >
-								<app-edit-table *ngFor="let tb of section.tables" [viewOnly]="true" [titulo]="tb.titulo" [dh_alteracao]="tb.dh_alteracao" [index]="i" [colunas]="tb.colunas" ></app-edit-table>
-							</div>
-						</div>
-						
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-</body>	
+                <div *ngIf="section.tipo == '2'">
+                  <div class="container-fluid mt-3">
+                    <div
+                      class="accordion"
+                      id="accordionExample-{{ section.nome }}"
+                    >
+                      <div class="accordion-item">
+                        <h2
+                          class="accordion-header"
+                          id="headingOne-{{ section.nome }}"
+                        >
+                          <button
+                            class="accordion-button"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            [attr.data-bs-target]="
+                              '#collapseOne-' + section.nome
+                            "
+                            aria-expanded="true"
+                            aria-controls="collapseOne"
+                          >
+                            Tabelas
+                          </button>
+                        </h2>
+                        <div
+                          id="collapseOne-{{ section.nome }}"
+                          class="accordion-collapse collapse"
+                          aria-labelledby="headingOne"
+                          [attr.data-bs-target]="
+                            '#accordionExample-' + section.nome
+                          "
+                          data-bs-parent="#accordionExample"
+                        >
+                          <div class="accordion-body">
+                            <app-edit-table
+                              *ngFor="
+                                let slt of section.procedures;
+                                let i = index
+                              "
+                              [index]="i"
+                              [viewOnly]="true"
+                              [descricaoTabela]="slt.descricaoTabela"
+                              [titulo]="slt.titulo"
+                              [dh_alteracao]="slt.dh_alteracao"
+                              [colunas]="slt.colunas"
+                            ></app-edit-table>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="accordion-item">
+                        <h2
+                          class="accordion-header"
+                          id="headingTwo-{{ section.nome }}"
+                        >
+                          <button
+                            class="accordion-button collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            [attr.data-bs-target]="
+                              '#collapseTwo-' + section.nome
+                            "
+                            aria-expanded="false"
+                            aria-controls="collapseTwo"
+                          >
+                            Procedures
+                          </button>
+                        </h2>
+                        <div
+                          id="collapseTwo-{{ section.nome }}"
+                          class="accordion-collapse collapse"
+                          aria-labelledby="headingTwo"
+                          [attr.data-bs-target]="
+                            '#accordionExample-' + section.nome
+                          "
+                        >
+                          <div class="accordion-body">
+                            <app-edit-procedure
+                              *ngFor="
+                                let slt of section.procedures;
+                                let i = index
+                              "
+                              [index]="i"
+                              [viewOnly]="true"
+                              [descricaoProcedure]="slt.descricaoProcedure"
+                              [titulo]="slt.titulo"
+                              [dh_alteracao]="slt.dh_alteracao"
+                              [params]="slt.params"
+                            ></app-edit-procedure>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- <app-edit-table *ngFor="let tb of section.tables" [viewOnly]="true" [titulo]="tb.titulo" [dh_alteracao]="tb.dh_alteracao" [index]="i" [colunas]="tb.colunas" ></app-edit-table> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
 </html>

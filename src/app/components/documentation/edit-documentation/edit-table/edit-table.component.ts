@@ -10,10 +10,11 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class EditTableComponent {
   
   @Output() onDeleteTable: EventEmitter<any> = new EventEmitter();
-  @Output() onAddColumn: EventEmitter<any> = new EventEmitter();
+  @Output() onEditTable: EventEmitter<EditTableComponent> = new EventEmitter();
 
   @Input() viewOnly:any = false
   @Input() titulo:any = ''
+  @Input() descricaoTabela:any = ''
   @Input() dh_alteracao:any = ''
   @Input() index:any 
 
@@ -23,7 +24,10 @@ export class EditTableComponent {
   coluna:any = {
     nome:'',
     tipo:'',
-    descricao:''
+    formato:'',
+    tamanho:'',
+    descricao:'',
+    exemplo:''
   }
 
   editIndex:any 
@@ -35,53 +39,55 @@ export class EditTableComponent {
   }
 
   disableEditMode(event: any) {
-    this.editMode = false;
-    console.log(event);
-    const descricao = event.descricao != undefined ? event.descricao.target.value : this.coluna.descricao
-    const nome = event.nome != undefined ? event.nome.target.value : this.coluna.nome  
-    const tipo = event.tipo != undefined ? event.tipo.target.value : this.coluna.tipo 
-    // Salvar as alterações
-    this.coluna = {
-      nome:nome,
-      tipo:tipo,
-      descricao:descricao
-    };
-
-    this.colunas[this.editIndex] = this.coluna
-
-    this.onAddColumn.emit(this.colunas);
+    this.saveChanges(event)
   }
 
   saveChanges(event: any) {
     this.editMode = false;
-    console.log(event);
+    
+    const descricaoTabela = event.descricaoTabela != undefined ? event.descricaoTabela.target.value : this.descricaoTabela
+    const titulo = event.titulo != undefined ? event.titulo.target.value : this.titulo
     
     const descricao = event.descricao != undefined ? event.descricao.target.value : this.coluna.descricao
     const nome = event.nome != undefined ? event.nome.target.value : this.coluna.nome  
     const tipo = event.tipo != undefined ? event.tipo.target.value : this.coluna.tipo 
+    const formato = event.formato != undefined ? event.formato.target.value : this.coluna.formato 
+    const tamanho = event.tamanho != undefined ? event.tamanho.target.value : this.coluna.tamanho 
+    const exemplo = event.exemplo != undefined ? event.exemplo.target.value : this.coluna.exemplo 
     // Salvar as alterações
     this.coluna = {
       nome:nome,
       tipo:tipo,
-      descricao:descricao
+      formato:formato,
+      tamanho:tamanho,
+      descricao:descricao,
+      exemplo:exemplo
     };
 
+    this.titulo = titulo
+    this.descricaoTabela = descricaoTabela
     this.colunas[this.editIndex] = this.coluna
 
-    this.onAddColumn.emit(this.colunas);
+    this.onEditTable.emit(this);
   }
 
 
   deleteThisTable(){
     this.onDeleteTable.emit(this.index)
   }
+
   addColuna(){
     if(this.coluna.nome == '' || this.coluna.tipo == ''){
       return
     }
     this.colunas.push(this.coluna)
 
-    this.onAddColumn.emit(this.colunas);
+    this.onEditTable.emit(this);
+  }
+
+  dellColuna(index:any){
+    this.colunas.splice(index,1)
+    this.onEditTable.emit(this);
   }
 
 }
