@@ -14,13 +14,21 @@
             <hr>
             <ul class="nav nav-pills flex-column mb-auto">
 
-              <li class="nav-item" *ngFor="let section of sections; let i = index">
+              <li class="nav-item d-inline-flex p-2"  style="cursor: pointer;" *ngFor="let section of sections; let i = index">
                 <button (click)="selectSection(section,i)" style="width: 100%;" class="nav-link active" *ngIf="sectionAtiva == i" aria-current="page">
                   {{section.nome}}
                 </button>
                 <button (click)="selectSection(section,i)" style="width: 100%;" class="nav-link text-white" *ngIf="sectionAtiva != i" aria-current="page">
                   {{section.nome}}
                 </button>
+                
+                <i 
+                class="bi bi-link mx-1 hoverIcon" 
+                (click)="copiarTexto('?to='+section.nome)"
+                data-bs-toggle="popover" 
+                data-bs-placement="top"
+                [title]="'?to='+section.nome+' : Copiado!'"                 ></i>
+                <i class="bi bi-trash-fill mx-1 text-danger hoverIcon" (click)="deleteSection(i)"></i>
               </li>
 
             </ul>

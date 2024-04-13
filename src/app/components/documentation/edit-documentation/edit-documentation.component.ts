@@ -1,15 +1,16 @@
-import { Component, EventEmitter, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { EditTableComponent } from './edit-table/edit-table.component';
 import { DownloadPageService } from '../../../services/download-page.service';
 import { StorageAcessService } from '../../../services/storage-acess.service';
 import { ViewDocumentationComponent } from '../view-documentation/view-documentation.component';
+declare const bootstrap: any; 
 
 @Component({
   selector: 'app-edit-documentation',
   templateUrl: './edit-documentation.component.html',
   styleUrl: './edit-documentation.component.css'
 })
-export class EditDocumentationComponent implements OnInit{
+export class EditDocumentationComponent implements OnInit, AfterViewInit{
 
   @Output() onUpdateStorage: EventEmitter<any> = new EventEmitter();
 
@@ -51,9 +52,16 @@ export class EditDocumentationComponent implements OnInit{
   }
 
   conteudoEditor:any = ''
+focus: any;
 
 
-  constructor(private downloadPageService:DownloadPageService,private storageAcessService:StorageAcessService ){}
+  constructor(
+    private downloadPageService:DownloadPageService,
+    private storageAcessService:StorageAcessService
+     ){}
+
+
+  
 
   exportar(){
     this.sections.forEach((sec,i)=>{
@@ -66,6 +74,22 @@ export class EditDocumentationComponent implements OnInit{
     this.downloadPageService.salvarHTML()
   }
 
+  copiarTexto(texto: string): void {
+    const tempTextArea = document.createElement("textarea");
+    tempTextArea.value = texto;
+    document.body.appendChild(tempTextArea);
+    tempTextArea.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempTextArea);
+  }
+
+  deleteSection(sectionId:any){
+    this.sections.splice(sectionId, 1);
+    this.loadDocumentacao.sections = this.sections
+    this.updateStorage()
+
+    this.selectSection(this.sections[0],0)
+  }
 
   createSection(){
     this.sections.push({
@@ -174,5 +198,24 @@ export class EditDocumentationComponent implements OnInit{
     this.documentationVersion = parseFloat(this.loadDocumentacao.version)
   }
 
+  
+  ngAfterViewInit(): void {
+    // Inicializa os popovers do Bootstrap
+     const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+    popoverTriggerList.map(function (popoverTriggerEl) {
+      const pop =  new bootstrap.Popover(popoverTriggerEl,{
+        delay: { "show": 100, "hide": 100 }
+      });
 
+      pop._element.addEventListener('show.bs.popover', () => {
+      
+        setTimeout(() => {
+          pop.hide();
+        }, 1000); 
+        
+      })
+    });
+    
+    // Fecha o popover após 5 segundos
+  }
 }
