@@ -180,7 +180,7 @@
             >
               <div class="accordion-body">
                 <app-edit-procedure
-                  (onDeleteTable)="deleteProcedures($event)"
+                  (onDeleteProcedure)="deleteProcedures($event)"
                   (onEditProcedure)="editProcedures($event)"
                   *ngFor="let slt of sectionProcedures; let i = index"
                   [index]="i"

@@ -150,6 +150,7 @@ focus: any;
     this.updateStorage()  }
 
   deleteProcedures(index:any){
+    console.log(index);
     
     const ativa = this.sectionAtiva
     this.sectionProcedures.splice(index,1)

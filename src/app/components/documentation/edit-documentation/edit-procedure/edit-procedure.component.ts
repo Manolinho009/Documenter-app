@@ -79,7 +79,7 @@ export class EditProcedureComponent {
   }
 
 
-  deleteThisTable(){
+  deleteThisProcedure(){
     this.onDeleteProcedure.emit(this.index)
   }
 
