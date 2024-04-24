@@ -13,6 +13,9 @@ import { EditDocumentationComponent } from './components/documentation/edit-docu
 import { EditTableComponent } from './components/documentation/edit-documentation/edit-table/edit-table.component';
 import { ViewDocumentationComponent } from './components/documentation/view-documentation/view-documentation.component';
 import { EditProcedureComponent } from './components/documentation/edit-documentation/edit-procedure/edit-procedure.component';
+import { LoginComponent } from './components/login/login.component';
+import { EntrarComponent } from './components/login/entrar/entrar.component';
+import { CriarComponent } from './components/login/criar/criar.component';
 
 
 
@@ -24,7 +27,10 @@ import { EditProcedureComponent } from './components/documentation/edit-document
     EditDocumentationComponent,
     EditTableComponent,
     ViewDocumentationComponent,
-    EditProcedureComponent
+    EditProcedureComponent,
+    LoginComponent,
+    EntrarComponent,
+    CriarComponent
     ],
   imports: [
     BrowserModule,

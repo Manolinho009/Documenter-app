@@ -6,3 +6,14 @@
     opacity: 0.6;
     font-size: 1.5rem;
 }
+
+
+
+
+.corpo{
+    overflow-x: hidden;
+    height: max-content;
+}
+.tamanho{
+    height: 99999999rem;
+}

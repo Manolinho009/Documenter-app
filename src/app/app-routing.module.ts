@@ -4,8 +4,10 @@ import { NewDocumentationComponent } from './components/documentation/new-docume
 import { HomeComponent } from './components/home/home.component';
 import { EditDocumentationComponent } from './components/documentation/edit-documentation/edit-documentation.component';
 import { ViewDocumentationComponent } from './components/documentation/view-documentation/view-documentation.component';
+import { LoginComponent } from './components/login/login.component';
 
 const routes: Routes = [
+  { path: 'login' , component: LoginComponent},
   { path: 'documentation/new' , component: NewDocumentationComponent},
   { path: 'documentation/edit' , component: EditDocumentationComponent},
   { path: 'documentation/view' , component: ViewDocumentationComponent},
