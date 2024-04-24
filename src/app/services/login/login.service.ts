@@ -9,6 +9,9 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class LoginService {
   private apiUrl = 'http://localhost:3000/user';
+  private user :User = new User(undefined,undefined,undefined);
+
+
 
   constructor(
     private http: HttpClient,
@@ -26,18 +29,27 @@ export class LoginService {
     return this.http.post<any>(this.apiUrl+'/auth', usuario, httpOptions);
   }
 
+  getUser(): User{
+    return this.user
+  }
 
   reAuthUser(): boolean {
-    
     const user = this.cookieService.get('user')
     
     if(user){
+      
+      const userJson = JSON.parse(user)
+      this.user = new User(
+        userJson.login
+        ,undefined
+        ,userJson.nome
+      )
+
       return true
     }
     else{
       return false
     }
-
   }
 
 }

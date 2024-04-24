@@ -7,13 +7,33 @@ export class StorageAcessService {
 
   constructor() { }
 
+
+  addDocumentationList(documentation:any){
+    let docs = this.listDocumentations()
+
+    docs[documentation.titulo] = documentation
+
+    localStorage.setItem('listaDocumentacoes',JSON.stringify(docs))
+
+  }
+
+  listDocumentations(){
+    const valorLocalStorage = localStorage.getItem('listaDocumentacoes')
+    if (valorLocalStorage) {
+      const loadDocumentacao = JSON.parse(valorLocalStorage);
+
+      return loadDocumentacao
+    } else {
+
+      return {}
+    }
+  }
  
   updateStorage(loadDocumentacao:any){
     localStorage.setItem('novaDocumentacao',JSON.stringify(loadDocumentacao))
   }
 
   changeStorage(){
-    console.log('era para funcionar');
     const valorLocalStorage = localStorage.getItem('novaDocumentacao')
 
     if (valorLocalStorage) {

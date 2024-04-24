@@ -16,9 +16,32 @@
             
             <div class="col-12 text-center  mt-4">
                 <a href="/documentation/new" type="button" class="btn btn-outline-dark mx-2">Nova Documentação</a>
-                <a href="/documentation/edit" type="button" class="btn btn-dark mx-2">Editar Documentação</a>
+                <!-- <a href="/documentation/edit" type="button" class="btn btn-dark mx-2">Editar Documentação</a> -->
             </div>
         </div>
 
+        <div class="mx-4 px-3">
+            <table class="table mt-3">
+                <thead>
+                  <tr>
+                    <th scope="col">Documentação:</th>
+                    <th scope="col">Ultima Alteração:</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr 
+                  *ngFor="let item of listDocumentations"
+                    (click)="carregarDocumentacao(item)"
+                    style="cursor: pointer;"
+                    class="buttonHover"
+                    >
+                    <th scope="row">{{item.titulo}}</th>
+                    <td>{{item.user_alteracao.nome}} - {{item.dh_alteracao}}</td>
+                    <td>{{item.commitText}}</td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
     </div>
 </div>

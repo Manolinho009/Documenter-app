@@ -4,6 +4,7 @@ import { DownloadPageService } from '../../../services/download-page.service';
 import { StorageAcessService } from '../../../services/storage-acess.service';
 import { ViewDocumentationComponent } from '../view-documentation/view-documentation.component';
 import { EditProcedureComponent } from './edit-procedure/edit-procedure.component';
+import { LoginService } from '../../../services/login/login.service';
 declare const bootstrap: any; 
 
 @Component({
@@ -62,7 +63,8 @@ focus: any;
 
   constructor(
     private downloadPageService:DownloadPageService,
-    private storageAcessService:StorageAcessService
+    private storageAcessService:StorageAcessService,
+    private loginService: LoginService
      ){}
 
 
@@ -77,6 +79,7 @@ focus: any;
     
     this.updateStorage()
     this.downloadPageService.salvarHTML()
+
   }
 
   copiarTexto(texto: string): void {
@@ -271,7 +274,12 @@ focus: any;
 
 
   updateStorage(){
+    this.loadDocumentacao.dh_alteracao = new Date().toLocaleString()
+    this.loadDocumentacao.user_alteracao = this.loginService.getUser()
+    
     this.storageAcessService.updateStorage(this.loadDocumentacao)
+    this.storageAcessService.addDocumentationList(this.loadDocumentacao)
+
     this.onUpdateStorage.emit(this.loadDocumentacao)
 
     this.viewDocumentationComponents.forEach(viewDocumentationComponent => {

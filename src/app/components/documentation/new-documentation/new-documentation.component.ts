@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Documentation } from '../documentation';
 import { Router } from '@angular/router';
+import { LoginService } from '../../../services/login/login.service';
 
 @Component({
   selector: 'app-new-documentation',
@@ -10,16 +11,21 @@ import { Router } from '@angular/router';
 export class NewDocumentationComponent {
 
   titulo:any = '';
-  documentacaoModelo:Documentation = new Documentation();
+  documentacaoModelo:Documentation | undefined;
 
-  constructor(private router: Router){}
+  constructor(
+    private router: Router
+    ,private loginService: LoginService
+  ){}
 
   criarNovaDocumentacao(){
     console.log(this.titulo);
+    
+    this.documentacaoModelo = new Documentation(
+      this.titulo
+      , this.loginService.getUser()
+    )
 
-    this.documentacaoModelo.titulo = this.titulo;
-
-    // Edite o JSON conforme necessário
     localStorage.setItem('novaDocumentacao', 
       JSON.stringify(this.documentacaoModelo)
     );
