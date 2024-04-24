@@ -1,1 +1,60 @@
-<p>criar works!</p>
+<div style="width: 23rem">
+    <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px">Sing in</h3>
+  
+    <div data-mdb-input-init class="form-outline mb-5">
+      <input
+        
+        type="text"
+        id="form2Example18"
+        class="form-control form-control-lg"
+        [(ngModel)]="login"
+      />
+      <label class="form-label" for="form2Example18">Matricula</label>
+    </div>
+  
+    <div data-mdb-input-init class="form-outline mt-3 mb-1">
+      <input
+        type="password"
+        id="form2Example28"
+        class="form-control form-control-lg"
+        [(ngModel)]="password"
+      />
+      <label class="form-label" for="form2Example28">Senha</label>
+    </div>
+
+    <div data-mdb-input-init class="form-outline mb-4">
+      <input
+        type="password"
+        id="form2Example28"
+        class="form-control form-control-lg"
+        [(ngModel)]="passwordConfirm"
+      />
+      <label class="form-label" for="form2Example28">Confirme a Senha</label>
+    </div>
+  
+    <div class="pt-1 mb-4">
+      <p class="small mb-5 pb-lg-2">
+        <span class="text-danger"
+        >{{errorMessage}}</span>
+      </p>
+
+      <button
+        data-mdb-button-init
+        data-mdb-ripple-init
+        class="btn btn-primary btn-lg btn-block"
+        type="button"
+        (click)="onCreate()"
+      >
+        Salvar
+      </button>
+    </div>
+  
+    <p class="small mb-5 pb-lg-2">
+      <a class="text-muted"
+      (click)="onLoginButton()"
+      style="cursor: pointer;"
+      >Já tem uma Conta?</a>
+    </p>
+  
+  </div>
+  

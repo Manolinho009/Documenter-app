@@ -28,9 +28,10 @@ export class AppComponent implements OnInit{
     fontNames: ['Helvetica', 'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Roboto', 'Times']
   }
 
+  constructor() { }
 
   ngOnInit(): void {
-    
+
   }
 
   eventTester(event:any){

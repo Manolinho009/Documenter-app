@@ -5,13 +5,28 @@ import { HomeComponent } from './components/home/home.component';
 import { EditDocumentationComponent } from './components/documentation/edit-documentation/edit-documentation.component';
 import { ViewDocumentationComponent } from './components/documentation/view-documentation/view-documentation.component';
 import { LoginComponent } from './components/login/login.component';
+import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
   { path: 'login' , component: LoginComponent},
-  { path: 'documentation/new' , component: NewDocumentationComponent},
-  { path: 'documentation/edit' , component: EditDocumentationComponent},
-  { path: 'documentation/view' , component: ViewDocumentationComponent},
-  { path: '' , component: HomeComponent
+  { 
+      path: 'documentation/new'
+    , component: NewDocumentationComponent
+    , canActivate: [AuthGuard]
+  },
+  { 
+      path: 'documentation/edit'
+    , component: EditDocumentationComponent
+    , canActivate: [AuthGuard]
+  },
+  { 
+      path: 'documentation/view'
+    , component: ViewDocumentationComponent
+    , canActivate: [AuthGuard]
+  },
+  { 
+    path: '' 
+    , component: HomeComponent
   }
 ];
 

@@ -7,4 +7,11 @@ import { Component } from '@angular/core';
 })
 export class LoginComponent {
 
+  loginForm: boolean = true
+
+  changeForm(){
+    this.loginForm = !this.loginForm
+  }
+
+
 }

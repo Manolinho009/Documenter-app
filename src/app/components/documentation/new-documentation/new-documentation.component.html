@@ -1,18 +1,27 @@
-<div class="container-fluid d-flex justify-content-center">
-    <div class="card my-3" style="width: 100%;" >
-        <div class="card-body">
-            <h2 class="my-3">Nova Documentação</h2>
-            <hr>
+<!-- As a link -->
+<nav class="navbar bg-dark navbar-dark shadow p-3">
+    <div class="container">
+      <a class="navbar-brand" href="#">Documenter</a>
+    </div>
+</nav>
+  
+<div>
+    <div class="container-fluid d-flex justify-content-center">
+        <div class="card my-3" style="width: 100%;" >
+            <div class="card-body">
+                <h2 class="my-3">Nova Documentação</h2>
+                <hr>
 
-            <div class="mb-3">
-                <label for="tituloDocumentacao" class="form-label">Titulo da Documentação</label>
-                <input [(ngModel)]="titulo" type="text" class="form-control" id="tituloDocumentacao" aria-describedby="titulo">
-                <div id="tituloDocumentacaoHelp" class="form-text">Digite o titulo da documentação geralmente nome do sistema</div>
-            </div>
+                <div class="mb-3">
+                    <label for="tituloDocumentacao" class="form-label">Titulo da Documentação</label>
+                    <input [(ngModel)]="titulo" type="text" class="form-control" id="tituloDocumentacao" aria-describedby="titulo">
+                    <div id="tituloDocumentacaoHelp" class="form-text">Digite o titulo da documentação geralmente nome do sistema</div>
+                </div>
 
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button (click)="criarNovaDocumentacao()" type="button" class="btn btn-outline-dark">Criar</button>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button (click)="criarNovaDocumentacao()" type="button" class="btn btn-outline-dark">Criar</button>
+                </div>
             </div>
         </div>
-      </div>
+    </div>
 </div>
