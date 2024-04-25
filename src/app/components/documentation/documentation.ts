@@ -3,7 +3,10 @@ import { User } from "../../models/user"
 export class Documentation {
     
     titulo:any
+    descricao:any
     sections:any
+
+    imagemCapa:any = ''
 
     commitText:any
     sectionsChanges:any[]
@@ -17,6 +20,7 @@ export class Documentation {
     constructor(
         titulo:any
         ,user_alteracao:User
+        ,descricao:any = ''
         ,sections:any = []
         ,commitText:any = ''
         ,sectionsChanges:any = []
@@ -32,6 +36,7 @@ export class Documentation {
         this.status = status
         this.dh_alteracao = dh_alteracao
         this.user_alteracao = user_alteracao
+        this.descricao = descricao
     }
 
 }

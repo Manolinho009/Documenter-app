@@ -11,7 +11,10 @@ import { LoginService } from '../../../services/login/login.service';
 export class NewDocumentationComponent {
 
   titulo:any = '';
+  descricao:any = '';
   documentacaoModelo:Documentation | undefined;
+  
+  selectedFile: any;
 
   constructor(
     private router: Router
@@ -24,12 +27,28 @@ export class NewDocumentationComponent {
     this.documentacaoModelo = new Documentation(
       this.titulo
       , this.loginService.getUser()
+      , this.descricao
     )
+
+    this.documentacaoModelo.imagemCapa = this.selectedFile
 
     localStorage.setItem('novaDocumentacao', 
       JSON.stringify(this.documentacaoModelo)
     );
+
     this.router.navigate(['/documentation/edit']);
+  }
+
+
+  processImage(imageInput:any){
+    const file: File = imageInput.files[0];
+    const reader = new FileReader();
+
+    reader.addEventListener('load', (event: any) => {
+      this.selectedFile = event.target.result
+    });
+    
+    reader.readAsDataURL(file);
   }
 
 }

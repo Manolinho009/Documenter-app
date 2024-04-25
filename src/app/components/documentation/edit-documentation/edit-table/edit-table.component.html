@@ -1,31 +1,26 @@
-<div
-  class="card text-center my-3"
-  style="
-    display: flex;
-    align-content: space-around;
-    align-items: stretch;
-    justify-content: center;
-  "
->
-  <div class="card-header">
-    {{ titulo }}
-    <button *ngIf="!viewOnly" (click)="deleteThisTable()">
-      <i class="bi bi-trash3-fill" style="color: red"></i>
-    </button>
-    <hr *ngIf="descricaoTabela" />
-    <p>{{ descricaoTabela }}</p>
+<div class="container mt-4" style="height: 9999vh;">
+  <div class="container" style="display: flex; flex-direction: row; flex-wrap: nowrap; align-items: baseline; justify-content: flex-start;">
+    <h4>{{ titulo }}: </h4>
+    <span class="mx-2 text-secondary">{{ descricaoTabela }}</span>
+
+
+    <i class="bi bi-trash-fill mx-5" style="color: #FE786F;"></i>
   </div>
-  <div class="card-body" style="max-width: 100%; overflow-x: auto">
+
+  <div class="container mt-5" style="display: flex;">
+    
     <table class="table">
       <thead>
-        <tr>
-          <th scope="col">Nome Coluna</th>
-          <th scope="col">Tipo de Dados</th>
+        <tr class="border-bottom border-dark-subtle">
+          <th scope="col">Coluna</th>
+          <th scope="col">Tipo</th>
           <th scope="col">Formato</th>
           <th scope="col">Tamanho</th>
           <th scope="col">Descrição</th>
-          <th scope="col">Exemplo*</th>
+          <th scope="col">Marcação</th>
+          <th scope="col">Exemplo</th>
         </tr>
+
       </thead>
       <tbody>
         <tr *ngFor="let col of colunas; let i = index">
@@ -111,6 +106,22 @@
           </td>
           <td>
             <span *ngIf="!editMode && !viewOnly" (dblclick)="enableEditMode(i)">
+              {{ col.marcacao }}
+            </span>
+            <span *ngIf="viewOnly">
+              {{ col.marcacao }}
+            </span>
+            <input
+              class="inputEditTable"
+              *ngIf="editMode"
+              type="text"
+              [value]="col.marcacao"
+              (blur)="disableEditMode({ marcacao: $event })"
+              (keyup.enter)="saveChanges({ marcacao: $event })"
+            />
+          </td>
+          <td>
+            <span *ngIf="!editMode && !viewOnly" (dblclick)="enableEditMode(i)">
               {{ col.exemplo }}
             </span>
             <span *ngIf="viewOnly">
@@ -169,6 +180,13 @@
           </td>
           <td>
             <input
+              [(ngModel)]="coluna.marcacao"
+              class="inputEditTable"
+              type="text"
+            />
+          </td>
+          <td>
+            <input
               [(ngModel)]="coluna.exemplo"
               class="inputEditTable"
               type="text"
@@ -181,8 +199,7 @@
         </tr>
       </tbody>
     </table>
-  </div>
-  <div class="card-footer text-body-secondary">
-    Ulltima alteração: {{ dh_alteracao }}
+
   </div>
 </div>
+

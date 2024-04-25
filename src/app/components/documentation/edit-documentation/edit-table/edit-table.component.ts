@@ -27,6 +27,7 @@ export class EditTableComponent {
     formato:'',
     tamanho:'',
     descricao:'',
+    marcacao:'',
     exemplo:''
   }
 
@@ -54,6 +55,7 @@ export class EditTableComponent {
     const formato = event.formato != undefined ? event.formato.target.value : this.coluna.formato 
     const tamanho = event.tamanho != undefined ? event.tamanho.target.value : this.coluna.tamanho 
     const exemplo = event.exemplo != undefined ? event.exemplo.target.value : this.coluna.exemplo 
+    const marcacao = event.marcacao != undefined ? event.marcacao.target.value : this.coluna.marcacao 
     // Salvar as alterações
     this.coluna = {
       nome:nome,
@@ -61,6 +63,7 @@ export class EditTableComponent {
       formato:formato,
       tamanho:tamanho,
       descricao:descricao,
+      marcacao:marcacao,
       exemplo:exemplo
     };
 

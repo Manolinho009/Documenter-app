@@ -1,63 +1,24 @@
-<div
-  class="card text-center my-3"
-  style="
-    display: flex;
-    align-content: space-around;
-    align-items: stretch;
-    justify-content: center;
-  "
->
-  <div class="card-header">
-    <span
-      *ngIf="!editMode && !viewOnly"
-      (dblclick)="enableEditModeDescricaoTitulo('titulo')"
-    >
-      {{ titulo }}
-    </span>
-    <span *ngIf="viewOnly">
-      {{ titulo }}
-    </span>
-    <input
-      class="inputEditTable"
-      *ngIf="editMode"
-      type="text"
-      [value]="titulo"
-      (blur)="disableEditMode({ titulo: $event })"
-      (keyup.enter)="saveChanges({ titulo: $event })"
-    />
-    <button *ngIf="!viewOnly" (click)="deleteThisProcedure()">
-      <i class="bi bi-trash3-fill" style="color: red"></i>
-    </button>
-    <hr *ngIf="descricaoProcedure" />
+<div class="container mt-4">
+  <div class="container" style="display: flex; flex-direction: row; flex-wrap: nowrap; align-items: baseline; justify-content: flex-start;">
+    <h4>{{ titulo }}: </h4>
+    <span class="mx-2 text-secondary">{{ descricaoProcedure }}</span>
 
-    <span
-      *ngIf="!editMode && !viewOnly"
-      (dblclick)="enableEditModeDescricaoTitulo('desc')"
-    >
-      {{ descricaoProcedure }}
-    </span>
-    <span *ngIf="viewOnly">
-      {{ descricaoProcedure }}
-    </span>
-    <textarea
-      class="inputEditTable"
-      *ngIf="editMode"
-      type="text"
-      [value]="descricaoProcedure"
-      (blur)="disableEditMode({ descricaoProcedure: $event })"
-      (keyup.enter)="saveChanges({ descricaoProcedure: $event })"
-    ></textarea>
+
+    <i class="bi bi-trash-fill mx-5" style="color: #FE786F;"></i>
   </div>
-  <div class="card-body" style="max-width: 100%; overflow-x: auto">
+
+  <div class="container mt-5" style="display: flex;">
+    
     <table class="table">
       <thead>
-        <tr>
+        <tr class="border-bottom border-dark-subtle">
           <th scope="col">&#64;Parametros</th>
           <th scope="col">Tipo da entrada</th>
           <th scope="col">Tamanho</th>
           <th scope="col">Descrição</th>
           <th scope="col">Exemplo*</th>
         </tr>
+
       </thead>
       <tbody>
         <tr *ngFor="let col of params; let i = index">
@@ -192,8 +153,8 @@
         </tr>
       </tbody>
     </table>
+
   </div>
-  <div class="card-footer text-body-secondary">
-    Ulltima alteração: {{ dh_alteracao }}
-  </div>
+
+
 </div>

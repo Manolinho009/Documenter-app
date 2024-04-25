@@ -2,3 +2,39 @@
     background-color: rgba(41, 41, 41, 0.445) !important;
     transform: scale(1.05);
 }
+
+.interFont {
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 100;
+    font-style: normal;
+    font-variation-settings:
+      "slnt" 0;
+  }
+
+
+
+.tag-success{
+    border-radius: 0.5rem; 
+    background-color: #8BEE9B;
+    color: #1F3A1E;
+    padding: 0.07rem;
+    padding-inline: 0.5rem;
+}
+
+
+.tag-danger{
+    border-radius: 0.5rem; 
+    background-color: #FE786F;
+    color: #ffffff;
+    padding: 0.07rem;
+    padding-inline: 0.5rem;
+}
+
+
+.btn-outline-dark{
+    background-color: white !important;
+}
+.btn-outline-dark:hover{
+    background-color: black !important;
+}

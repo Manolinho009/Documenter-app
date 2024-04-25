@@ -58,7 +58,7 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
   }
 
   conteudoEditor:any = ''
-focus: any;
+  focus: any;
 
 
   constructor(
