@@ -26,7 +26,7 @@ export class LoginService {
       })
     };
 
-    return this.http.post<any>(this.apiUrl+'/auth', usuario, httpOptions);
+    return this.http.post<any>(this.apiUrl+'/login', usuario, httpOptions);
   }
 
   getUser(): User{
@@ -44,6 +44,7 @@ export class LoginService {
         ,undefined
         ,userJson.nome
       )
+      this.user.id = userJson.id
 
       return true
     }

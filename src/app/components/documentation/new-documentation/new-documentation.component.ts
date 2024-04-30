@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Documentation } from '../documentation';
 import { Router } from '@angular/router';
 import { LoginService } from '../../../services/login/login.service';
+import { DocumentationService } from '../../../services/api/documentation.service';
 
 @Component({
   selector: 'app-new-documentation',
@@ -16,27 +17,45 @@ export class NewDocumentationComponent {
   
   selectedFile: any;
 
+  errorMessage:any = ''
+
   constructor(
     private router: Router
     ,private loginService: LoginService
+    ,private documentationService: DocumentationService
   ){}
 
   criarNovaDocumentacao(){
-    console.log(this.titulo);
-    
+
     this.documentacaoModelo = new Documentation(
       this.titulo
       , this.loginService.getUser()
       , this.descricao
     )
+    this.documentacaoModelo.idUser = this.loginService.getUser().id
 
-    this.documentacaoModelo.imagemCapa = this.selectedFile
+    if (this.selectedFile){
+      this.documentacaoModelo.imagemCapa = this.selectedFile
+    }
 
+    
+    const retorno = this.documentationService.createDocumentation(this.documentacaoModelo)
+    
     localStorage.setItem('novaDocumentacao', 
       JSON.stringify(this.documentacaoModelo)
     );
 
-    this.router.navigate(['/documentation/edit']);
+    retorno.subscribe(
+      response => {
+        console.log(response);
+        this.router.navigate(['/documentation/edit']);
+      },
+      error => {
+        console.log(error.error);
+        this.errorMessage = error.error.status
+      }
+    )
+
   }
 
 

@@ -5,6 +5,11 @@ import { StorageAcessService } from '../../../services/storage-acess.service';
 import { ViewDocumentationComponent } from '../view-documentation/view-documentation.component';
 import { EditProcedureComponent } from './edit-procedure/edit-procedure.component';
 import { LoginService } from '../../../services/login/login.service';
+import { DocumentationService } from '../../../services/api/documentation.service';
+import { Documentation } from '../documentation';
+import { User } from '../../../models/user';
+import { CookieService } from 'ngx-cookie-service';
+import { Router } from '@angular/router';
 declare const bootstrap: any; 
 
 @Component({
@@ -39,7 +44,7 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
   nomeNovaSection:any = ''
   
   currentHtml:any = ''
-  loadDocumentacao:any
+  loadDocumentacao:Documentation
 
   configSummerNote = {
     placeholder: '',
@@ -64,20 +69,47 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
   constructor(
     private downloadPageService:DownloadPageService,
     private storageAcessService:StorageAcessService,
-    private loginService: LoginService
-     ){}
+    private loginService: LoginService,
+    private documentationService:DocumentationService,
+    private cookieService: CookieService,
+    private router: Router
+     ){
+      this.loadDocumentacao = new Documentation(
+        undefined
+        ,this.loginService.getUser()
+    )
+     }
 
+  goTo(path:any = '/'){
+    this.router.navigate([path])
+  }
 
-  
-
-  exportar(){
+  commit(){
     this.sections.forEach((sec,i)=>{
       this.sections[i].changes = 0
     })
+    
     this.loadDocumentacao.version = this.documentationVersion + 1;
     this.loadDocumentacao.commitText = this.documentationCommitText
-    
+
     this.updateStorage()
+
+    const retorno = this.documentationService.updateDocumentation(
+      this.loadDocumentacao
+    )
+    retorno.subscribe(
+      response => {
+        console.log(response);
+      },
+      error => {
+        console.log(error.error);
+      }
+    )
+    
+  }
+  
+
+  exportar(){
     this.downloadPageService.salvarHTML()
 
   }
@@ -288,8 +320,19 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
   }
 
   ngOnInit(): void {
+    const loadDocumentacaoStorage = this.storageAcessService.changeStorage()
+    this.loadDocumentacao = new Documentation(
+      loadDocumentacaoStorage.titulo,
+      this.loginService.getUser(),
+      loadDocumentacaoStorage.descricao,
+      loadDocumentacaoStorage.sections,
+      loadDocumentacaoStorage.commitText,
+      loadDocumentacaoStorage.sectionsChanges,
+      loadDocumentacaoStorage.version,
+      loadDocumentacaoStorage.status,
+      loadDocumentacaoStorage.dh_alteracao,
+    )
     
-    this.loadDocumentacao = this.storageAcessService.changeStorage()
     this.sections = this.loadDocumentacao.sections
     this.documentationTitle = this.loadDocumentacao.titulo
     this.documentationVersion = parseFloat(this.loadDocumentacao.version)

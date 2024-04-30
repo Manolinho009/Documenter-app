@@ -2,7 +2,9 @@
 
   <div class="col-7">
     <div class="container-fluid">
-      <div class="mt-3 mx-3">
+      <div 
+        (click)="goTo('/')"
+        class="mt-3 mx-3">
         <i style="cursor: pointer;"  
           class="fs-3 bi bi-box-arrow-left"
           ></i>
@@ -26,8 +28,10 @@
             Nova Aba
           </h5>
         </div>
-        <div 
-        
+        <div             
+            data-bs-toggle="modal"
+            data-bs-target="#saveDocModal"
+
             style="border-color: #EEC08B !important; text-align: center; cursor: pointer;" 
             class="container border-bottom border-dark-subtle mx-2">
 
@@ -37,8 +41,7 @@
           </h6>
         </div>
         <div 
-            data-bs-toggle="modal"
-            data-bs-target="#saveDocModal"
+            (click)="exportar()"
             style="border-color: #EEC08B !important; text-align: center; cursor: pointer;" 
             class="container border-bottom border-dark-subtle mx-2">
 
@@ -238,7 +241,7 @@
           </button>
           <button
             type="submit"
-            (click)="exportar()"
+            (click)="commit()"
             data-bs-dismiss="modal"
             class="btn btn-primary"
           >

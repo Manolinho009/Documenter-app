@@ -5,6 +5,7 @@ export class Documentation {
     titulo:any
     descricao:any
     sections:any
+    tags:any[] = []
 
     imagemCapa:any = ''
 
@@ -16,6 +17,7 @@ export class Documentation {
     
     dh_alteracao:any
     user_alteracao:User
+    idUser:number = 0
 
     constructor(
         titulo:any
@@ -24,9 +26,9 @@ export class Documentation {
         ,sections:any = []
         ,commitText:any = ''
         ,sectionsChanges:any = []
-        ,version:any = ''
-        ,status:any = ''
-        ,dh_alteracao:any = ''
+        ,version:any = 0
+        ,status:any = '1'
+        ,dh_alteracao:any = new Date().toLocaleString()
     ){
         this.titulo = titulo
         this.sections = sections

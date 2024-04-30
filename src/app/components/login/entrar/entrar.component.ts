@@ -25,13 +25,17 @@ export class EntrarComponent {
     private router: Router
   ) {}
 
+
   verificaAuthUsuario(AuthResponse:any){
-    if(AuthResponse.auth){
+    
+    if('user' in AuthResponse){
       console.log('Usuario Authenticado :', AuthResponse.login);
-      this.cookieService.set('user', JSON.stringify(AuthResponse));
+      this.cookieService.set('user', JSON.stringify(AuthResponse.user));
+      this.cookieService.set('token', JSON.stringify(AuthResponse.token));
       this.router.navigate(['/'])
     }
     else{
+      this.errorMessage = AuthResponse.status
       console.error('Erro ao Authenticar usuário:', AuthResponse);
     }
   }

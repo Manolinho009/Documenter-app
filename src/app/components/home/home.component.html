@@ -62,9 +62,13 @@
             style="cursor: pointer; border-color: black !important; border-width: 1px !important;">
               <div class="row g-0">
                 <div class="col-md-3 col-sm-4 ">
-                  <img 
+                  <img *ngIf="item.imagemCapa == ''"
                     style="height: 100%;"
                     src="../../../assets/imagemLogin.jpg" 
+                    class="img-fluid rounded-start" alt="...">
+                  <img *ngIf="item.imagemCapa != ''"
+                    style="height: 100%;"
+                    src="{{item.imagemCapa}}" 
                     class="img-fluid rounded-start" alt="...">
                 </div>
                 <div class="col-md-9 col-sm-8">
@@ -82,7 +86,7 @@
 
                     </div>
 
-                    <p class="card-text"><small class="text-body-secondary">Ultima Alteração : {{item.user_alteracao.nome}} | {{item.dh_alteracao}}</small></p>
+                    <p class="card-text"><small class="text-body-secondary">Ultima Alteração : {{item.user_alteracao}} | {{item.dh_alteracao}}</small></p>
                   </div>
                 </div>
 

@@ -3,7 +3,7 @@ export class User {
     login:string
     password:string 
     nome:string | undefined
-
+    id:number = 0
 
     constructor(
         login:any
