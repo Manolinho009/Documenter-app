@@ -17,7 +17,7 @@ import { LoginComponent } from './components/login/login.component';
 import { EntrarComponent } from './components/login/entrar/entrar.component';
 import { CriarComponent } from './components/login/criar/criar.component';
 
-
+import { NgxImageCompressService } from 'ngx-image-compress';
 
 @NgModule({
   declarations: [
@@ -40,7 +40,7 @@ import { CriarComponent } from './components/login/criar/criar.component';
     FormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [NgxImageCompressService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

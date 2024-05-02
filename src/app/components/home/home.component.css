@@ -38,3 +38,29 @@
 .btn-outline-dark:hover{
     background-color: black !important;
 }
+
+
+/* Estilize a legenda */
+.thumbnail {
+position: relative;
+}
+
+.desc {
+    position: absolute;
+    bottom: 0;
+    height: 30%;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.432);
+    color: #fff;
+    padding: 5px;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.3s;
+    text-align: center;
+    cursor: pointer;
+
+}
+
+.thumbnail:hover .desc {
+    opacity: 1;
+}

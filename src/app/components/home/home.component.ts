@@ -3,7 +3,8 @@ import { StorageAcessService } from '../../services/storage-acess.service';
 import { Router } from '@angular/router';
 import { LoginService } from '../../services/login/login.service';
 import { DocumentationService } from '../../services/api/documentation.service';
-import { json } from 'express';
+import { CookieService } from 'ngx-cookie-service';
+import { ImageService } from '../../services/image.service';
 
 @Component({
   selector: 'app-home',
@@ -14,12 +15,16 @@ export class HomeComponent implements OnInit {
 
 
   listDocumentations : any = []
+  imagemPerfilSelecionada:any = undefined
+
 
   constructor(
     private storageAcessService : StorageAcessService
     , private router: Router
     , public loginService: LoginService
     , private documentationService : DocumentationService
+    , private cookieService: CookieService
+    , private imageService : ImageService
   ){}
 
   carregarDocumentacao(documentation:any){
@@ -27,7 +32,53 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/documentation/edit'])
   }
 
+
+
+  alterarImagemPerfil(){
+
+    let user = this.loginService.getUser()
+
+    user.imagem = this.imagemPerfilSelecionada
+
+    const retorno = this.loginService.alterarImagemUser(user)
+    retorno.subscribe(
+      response => {
+        console.log(response);
+        
+      }
+      ,error => {
+        console.log(error);
+
+      }
+    )
+  }
+
+
+
+  selecionarImagem(imagemInput:any){
+    this.imageService.processImage(imagemInput, (event:any) => {
+
+      if (event.type === "loadend") {
+        const processFile = event.target.result;
+
+        this.imageService.gerarFile(processFile).then((result)=>{
+          const imagemComprimida = result
+          this.imagemPerfilSelecionada = imagemComprimida
+        });
+        
+      }
+    });
+  }
+
+
+  getUserImage(): string{
+    const imagem = this.cookieService.get('imagemPerfil')
+    return imagem
+  }
+
+
   ngOnInit(): void {
+    
     const retorno = this.documentationService.listDocumentations()
     retorno.subscribe(
       response => {

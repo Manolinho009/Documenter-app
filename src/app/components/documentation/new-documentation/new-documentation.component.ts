@@ -4,6 +4,10 @@ import { Router } from '@angular/router';
 import { LoginService } from '../../../services/login/login.service';
 import { DocumentationService } from '../../../services/api/documentation.service';
 
+// Importe as bibliotecas necessárias
+import * as imageSize from 'image-size';
+import { NgxImageCompressService } from 'ngx-image-compress';
+
 @Component({
   selector: 'app-new-documentation',
   templateUrl: './new-documentation.component.html',
@@ -23,6 +27,7 @@ export class NewDocumentationComponent {
     private router: Router
     ,private loginService: LoginService
     ,private documentationService: DocumentationService
+    ,private imageCompress: NgxImageCompressService
   ){}
 
   criarNovaDocumentacao(){
@@ -59,12 +64,56 @@ export class NewDocumentationComponent {
   }
 
 
+  file: any;
+  localUrl: any;
+  localCompressedURl: any;
+  sizeOfOriginalImage: any;
+  sizeOFCompressedImage: any;
+
+
+  finalFile:any;
+  compressFile(image: any, fileName: string) {
+    
+    const orientation = -1;
+    this.sizeOfOriginalImage = this.imageCompress.byteCount(image) / (1024 * 1024);
+    console.log('Size in bytes is now:', this.sizeOfOriginalImage);
+
+    this.imageCompress.compressFile(image, orientation, 50, 50).then(result => {
+      this.localCompressedURl = result;
+      this.sizeOFCompressedImage = this.imageCompress.byteCount(result) / (1024 * 1024);
+      console.log('Size in bytes after compression:', this.sizeOFCompressedImage);
+
+      // Create a File object from the compressed data
+      const imageBlob = this.dataURItoBlob(result.split(',')[1]);
+      const imageFile = new File([imageBlob], fileName, { type: 'image/jpeg' });
+      // Now you can send this compressed image file to an API using FormData
+
+      console.log(imageFile);
+      this.finalFile = imageFile
+    });
+  }
+
+  // Helper function to convert data URI to Blob
+  dataURItoBlob(dataURI: string): Blob {
+    const byteString = atob(dataURI);
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const uint8Array = new Uint8Array(arrayBuffer);
+    for (let i = 0; i < byteString.length; i++) {
+      uint8Array[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([arrayBuffer], { type: 'image/jpeg' });
+  }
+
+
   processImage(imageInput:any){
     const file: File = imageInput.files[0];
     const reader = new FileReader();
 
     reader.addEventListener('load', (event: any) => {
-      this.selectedFile = event.target.result
+      // this.selectedFile = event.target.result;
+      this.localUrl = event.target.result;
+      this.compressFile(this.localUrl, this.file.name);
+
     });
     
     reader.readAsDataURL(file);

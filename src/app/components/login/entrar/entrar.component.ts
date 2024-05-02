@@ -27,11 +27,26 @@ export class EntrarComponent {
 
 
   verificaAuthUsuario(AuthResponse:any){
+
+    console.log(AuthResponse.imagem);
     
     if('user' in AuthResponse){
       console.log('Usuario Authenticado :', AuthResponse.login);
+
+      // this.cookieService.set('userImage', AuthResponse.imagem);
       this.cookieService.set('user', JSON.stringify(AuthResponse.user));
-      this.cookieService.set('token', JSON.stringify(AuthResponse.token));
+      this.cookieService.set('token', AuthResponse.token);
+
+      let user = new User('', '','')
+
+      user.nome = AuthResponse.user.nome
+      user.funcao = AuthResponse.user.funcao
+      user.imagem = AuthResponse.imagem
+      user.login = AuthResponse.user.login
+      user.id = AuthResponse.user.id
+
+      this.loginService.setUser(user)
+      
       this.router.navigate(['/'])
     }
     else{

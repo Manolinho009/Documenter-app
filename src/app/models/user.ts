@@ -4,6 +4,9 @@ export class User {
     password:string 
     nome:string | undefined
     id:number = 0
+    funcao:string = ''
+    
+    imagem:string = ''
 
     constructor(
         login:any

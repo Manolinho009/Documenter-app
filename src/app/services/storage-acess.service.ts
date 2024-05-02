@@ -8,6 +8,23 @@ export class StorageAcessService {
   constructor() { }
 
 
+  getValue(key:string){
+    const valorLocalStorage = localStorage.getItem(key)
+
+    if (valorLocalStorage) {
+      const loadDocumentacao = JSON.parse(valorLocalStorage);
+      return loadDocumentacao
+    } else {
+
+      return {}
+    }
+
+  }
+  
+  setValue(key:string, value:any){
+    localStorage.setItem(key,JSON.stringify(value))
+  }
+
   addDocumentationList(documentation:any){
     let docs = this.listDocumentations()
 

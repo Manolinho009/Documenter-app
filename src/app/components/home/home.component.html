@@ -11,8 +11,14 @@
       </div>
 
       <div class="mt-5 pt-4 container" style="width: 100%; height: 15rem; display: flex;flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;">
-          <img src="../../../assets/user-template.jfif" 
-              style="border-radius: 50%; max-width: 100%; max-height: 100%;" alt="User Image">
+            
+            <div>
+              <div class="thumbnail">
+                <img src="{{loginService.getUser().imagem}}" 
+                        style="border-radius: 100%; width: 15rem; height: 15rem; " alt="User Image">
+                <span class="desc" data-bs-toggle="modal" data-bs-target="#mudarImagemPerfil" >Mudar imagem</span>
+              </div>
+            </div>
 
               <div class="mt-2 mb-2" style="max-width: 12rem;">
 
@@ -20,7 +26,7 @@
                   <h2 class="h2 text-black mb-4">{{loginService.getUser().nome}}</h2>
                 </div>
                 <div>
-                  <span style="font-size: 12pt;" class="text-black display-6 ">Analista de Sistemas Js.</span>
+                  <span style="font-size: 12pt;" class="text-black display-6 ">{{loginService.getUser().funcao}}</span>
                 </div>
               </div>
         </div>
@@ -112,3 +118,47 @@
 </div>
 
 
+
+<!-- Modal -->
+<div class="modal fade" id="mudarImagemPerfil" tabindex="-1" aria-labelledby="mudarImagemPerfilLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="mudarImagemPerfilLabel">Nova Imagem Perfil</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="input-group mb-3">
+          <label class="input-group-text" for="inputGroupFile01">Imagem de Perfil</label>
+          <input #imageInput
+            accept="image/*"
+            type="file" 
+            placeholder="Selecione Uma Imagem de Perfil" 
+            class="form-control"
+            (change)="selecionarImagem(imageInput)" 
+            >
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        
+        <button *ngIf="imagemPerfilSelecionada"
+                (click)="alterarImagemPerfil()" 
+                type="button" 
+                class="btn btn-primary" 
+                data-bs-dismiss="modal"
+        >Alterar</button>
+
+        <button *ngIf="!imagemPerfilSelecionada"
+                disabled
+                (click)="alterarImagemPerfil()" 
+                type="button" 
+                class="btn btn-primary" 
+                data-bs-dismiss="modal"
+        >Alterar</button>
+      </div>
+    </div>
+  </div>
+</div>
