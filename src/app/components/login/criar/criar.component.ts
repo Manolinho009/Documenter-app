@@ -12,6 +12,8 @@ import { Router } from '@angular/router';
 export class CriarComponent {
 
   @Output() onChangeForm: EventEmitter<any> = new EventEmitter();
+  
+  nome:any ='';
 
   login:any ='';
   password:any ='';
@@ -26,29 +28,94 @@ export class CriarComponent {
   ) { }
 
   verificaAuthUsuario(AuthResponse:any){
-    if(AuthResponse.auth){
+
+    if('user' in AuthResponse){
       console.log('Usuario Authenticado :', AuthResponse.login);
-      this.cookieService.set('user', JSON.stringify(AuthResponse));
+
+      // this.cookieService.set('userImage', AuthResponse.imagem);
+      this.cookieService.set('user', JSON.stringify(AuthResponse.user));
+      this.cookieService.set('token', AuthResponse.token);
+
+      let user = new User('', '','')
+
+      user.nome = AuthResponse.user.nome
+      user.funcao = AuthResponse.user.funcao
+      user.imagem = AuthResponse.imagem
+      user.login = AuthResponse.user.login
+      user.id = AuthResponse.user.id
+
+      this.loginService.setUser(user)
+      
       this.router.navigate(['/'])
     }
     else{
+      this.errorMessage = AuthResponse.status
       console.error('Erro ao Authenticar usuário:', AuthResponse);
     }
+
+    // if(AuthResponse.auth){
+    //   console.log('Usuario Authenticado :', AuthResponse.login);
+    //   this.cookieService.set('user', JSON.stringify(AuthResponse));
+    //   this.router.navigate(['/'])
+    // }
+    // else{
+    //   console.error('Erro ao Authenticar usuário:', AuthResponse);
+    //   this.errorMessage = AuthResponse.status
+    // }
   }
 
   onCreate(){
 
+    let errorMessageVasio = 'Preencha os campos: '
+
+    if(this.nome == ''){
+      errorMessageVasio += 'Nome, '
+    }
+    if(this.login == ''){
+      errorMessageVasio += 'Matricula, '
+    }
+    if(this.password == ''){
+      errorMessageVasio += 'Senha, '
+    }
+    if(this.passwordConfirm == ''){
+      errorMessageVasio += 'Confirmação de Senha'
+    }
+
+    if
+    (this.nome == ''
+    || this.login == ''
+    || this.password == ''
+    || this.passwordConfirm == ''){
+        this.errorMessage = errorMessageVasio
+        return
+    }
+
     if (this.password == this.passwordConfirm){
-      const user = new User(
+      let user = new User(
         this.login
         , this.password
         , ''
       )
 
-      const authenticated = this.loginService.authUser(user)
-      authenticated.subscribe(
+
+
+
+      user.funcao = '1'
+      user.nome = this.nome
+
+      const retorno = this.loginService.createUser(user)
+      retorno.subscribe(
         response => {
-          this.verificaAuthUsuario(response);
+
+          const authenticated = this.loginService.authUser(user)
+          authenticated.subscribe(
+            response => {
+              this.verificaAuthUsuario(response)
+            },
+            error => {
+              this.verificaAuthUsuario(error.error)
+            }
+          )
         },
         error => {
           this.verificaAuthUsuario(error.error);

@@ -18,6 +18,8 @@ import { EntrarComponent } from './components/login/entrar/entrar.component';
 import { CriarComponent } from './components/login/criar/criar.component';
 
 import { NgxImageCompressService } from 'ngx-image-compress';
+import { Select2Module } from 'ng-select2-component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
   declarations: [
@@ -38,9 +40,12 @@ import { NgxImageCompressService } from 'ngx-image-compress';
     NgxSummernoteModule,
     ReactiveFormsModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    Select2Module,
+    NgSelectModule
+    
   ],
   providers: [NgxImageCompressService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

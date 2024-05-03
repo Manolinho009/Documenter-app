@@ -2,6 +2,8 @@ import { User } from "../../models/user"
 
 export class Documentation {
     
+    id:any
+    
     titulo:any
     descricao:any
     sections:any

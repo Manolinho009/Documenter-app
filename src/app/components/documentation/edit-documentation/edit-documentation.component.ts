@@ -10,6 +10,7 @@ import { Documentation } from '../documentation';
 import { User } from '../../../models/user';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
+import { Select2Data } from 'ng-select2-component';
 declare const bootstrap: any; 
 
 @Component({
@@ -18,6 +19,9 @@ declare const bootstrap: any;
   styleUrl: './edit-documentation.component.css'
 })
 export class EditDocumentationComponent implements OnInit, AfterViewInit{
+
+
+  modalNewSection:any
 
   @Output() onUpdateStorage: EventEmitter<any> = new EventEmitter();
 
@@ -46,6 +50,11 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
   currentHtml:any = ''
   loadDocumentacao:Documentation
 
+  tagsList:any = []
+  tagsSelecionadas:any = []
+  tagsListSelect2:any = [];
+
+
   configSummerNote = {
     placeholder: '',
     tabsize: 2,
@@ -65,6 +74,8 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
   conteudoEditor:any = ''
   focus: any;
 
+  errorMessage:any = ''
+
 
   constructor(
     private downloadPageService:DownloadPageService,
@@ -80,17 +91,27 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
     )
      }
 
+
+
+  limparCampos(){
+    this.errorMessage = ''
+    this.tipoNovaSection = ''
+    this.nomeNovaSection = ''
+  }
+
   goTo(path:any = '/'){
     this.router.navigate([path])
   }
 
   commit(){
+    
     this.sections.forEach((sec,i)=>{
       this.sections[i].changes = 0
     })
     
     this.loadDocumentacao.version = this.documentationVersion + 1;
     this.loadDocumentacao.commitText = this.documentationCommitText
+    this.loadDocumentacao.tags = this.tagsSelecionadas
 
     this.updateStorage()
 
@@ -132,17 +153,35 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
   }
 
   createSection(){
-    this.sections.push({
-        tipo: this.tipoNovaSection
-        , nome: this.nomeNovaSection
-        , html:''
-        , tables:[]
-        , procedures:[]
-        , changes:1
-      })
+
+    if (this.nomeNovaSection == '') {
+      this.errorMessage = 'Preencha o campo: Titulo'
+      return
+    }
+    if (this.tipoNovaSection == '') {
+      this.errorMessage = 'Selecione um Tipo'
+      return
+    }
+
+    const novaSection = {
+      tipo: this.tipoNovaSection
+      , nome: this.nomeNovaSection
+      , html:''
+      , tables:[]
+      , procedures:[]
+      , changes:1
+    }
+    const index = this.sections.length
+
+    this.sections.push(novaSection)
+
+    this.selectSection(novaSection,index)
+
     this.loadDocumentacao.sections = this.sections
-    
     this.updateStorage()
+    this.limparCampos()
+
+    this.modalNewSection.hide()
   }
 
 
@@ -331,17 +370,46 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
       loadDocumentacaoStorage.version,
       loadDocumentacaoStorage.status,
       loadDocumentacaoStorage.dh_alteracao,
+      
     )
     
+    this.loadDocumentacao.imagemCapa = loadDocumentacaoStorage.imagemCapa
     this.sections = this.loadDocumentacao.sections
     this.documentationTitle = this.loadDocumentacao.titulo
     this.documentationVersion = parseFloat(this.loadDocumentacao.version)
+
+    
+    const retornoTag = this.documentationService.listTags()
+    retornoTag.subscribe(
+      response => {
+
+        let tags:any =[]
+        response.forEach((element: any) => {
+          tags.push(element)
+          this.tagsListSelect2.push(
+            {
+              value: element,
+              label: element,
+              data: { color: 'green', name: element },
+            }
+          )
+        });
+
+        this.tagsList = tags
+        console.log(tags);
+
+        
+      },
+      error => {
+        console.log(error.error);
+      }
+    )
   }
 
   
   ngAfterViewInit(): void {
     // Inicializa os popovers do Bootstrap
-     const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+    const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
     popoverTriggerList.map(function (popoverTriggerEl) {
       const pop =  new bootstrap.Popover(popoverTriggerEl,{
         delay: { "show": 100, "hide": 100 }
@@ -357,6 +425,9 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
     });
     
     // Fecha o popover após 5 segundos
+
+    this.modalNewSection = new bootstrap.Modal('#newSectionModal')
+
   }
 
 

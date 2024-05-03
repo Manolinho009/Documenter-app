@@ -33,6 +33,39 @@ export class HomeComponent implements OnInit {
   }
 
 
+  deleteDocumentation(documentation:any){
+    console.log(documentation);
+
+    const retorno = this.documentationService.deleteDocumentation(documentation)
+    retorno.subscribe(
+      result=>{
+        console.log(result);
+        this.ngOnInit()
+      }
+      ,error=>{
+        console.log(error);
+        
+      }
+    )
+    
+  }
+
+  separarTags(tag:string){
+    const arr = tag.split(';');
+    let finalArr:any = [];
+    arr.forEach((element)=>{
+
+      finalArr.push({'tagName':element.split(':')[0], 'tagColor':element.split(':')[1], 'TagId':element.split(':')[3] })
+    })
+
+    return finalArr
+  }
+
+
+  deletarTagDocumentacao(idDoc:any,idTag:any){
+    console.log(idDoc,idTag);
+    
+  }
 
   alterarImagemPerfil(){
 
@@ -95,13 +128,6 @@ export class HomeComponent implements OnInit {
         console.log(error.error);
       }
     )
-
-    // const documentationList = this.storageAcessService.listDocumentations()
-    // this.listDocumentations = Object.keys(documentationList).map((key)=>{return documentationList[key]})
-    
-    console.log(this.listDocumentations);
-    console.log(this.loginService.getUser());
-    
   }
 
 

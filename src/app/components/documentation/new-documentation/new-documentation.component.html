@@ -20,21 +20,41 @@
                     <div class="card-body">
 
                         <div class="row g-3">
+
                             <div class="col-sm-5">
-                                <input [(ngModel)]="titulo" type="text" class="form-control" id="tituloDocumentacao" placeholder="Titulo do Projeto" aria-describedby="titulo">
+                                <div class="form-floating">
+                                    <input 
+                                        [(ngModel)]="titulo" 
+                                        type="text" 
+                                        class="form-control" 
+                                        id="tituloDocumentacao" 
+                                        aria-describedby="titulo"
+                                        [ngClass]="{'is-invalid': !validaTitulo}"
+                                        >
+                                    <label for="tituloDocumentacao">Titulo do Projeto *</label>
+                                </div>
+                            </div>
+
+
+                            <div class="col-sm">
+                                <div class="form-floating">
+                                    <input [(ngModel)]="descricao" type="text" class="form-control" id="descricaoDoProjeto" aria-label="Descrição">
+                                    <label for="descricaoDoProjeto">Descrição do Projeto</label>
+                                </div>
                             </div>
                             <div class="col-sm">
-                              <input [(ngModel)]="descricao" type="text" class="form-control" placeholder="Descrição do Projeto" aria-label="Descrição">
-                            </div>
-                            <div class="col-sm">
-                              <input  
-                                    #imageInput
-                                    accept="image/*"
-                                    (change)="processImage(imageInput)"
-                                    type="file" 
-                                    class="form-control" 
-                                    placeholder="Imagem do Projeto" 
-                                    aria-label="Imagem">
+                                <div class="form-floating">
+                                    <input  
+                                        style="background-color: #f8f9fa;"
+                                        #imageInput
+                                        accept="image/*"
+                                        (change)="selecionarImagem(imageInput)"
+                                        type="file" 
+                                        class="form-control" 
+                                        placeholder="Imagem do Projeto" 
+                                        aria-label="Imagem">
+                                        <label for="imageInput">Imagem de Capa do Projeto</label>
+                                </div>
                             </div>
 
                             <span class="text-danger">{{errorMessage}}</span>

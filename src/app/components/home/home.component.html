@@ -64,7 +64,6 @@
 
             <div class="card my-3"
             *ngFor="let item of listDocumentations"
-            (click)="carregarDocumentacao(item)"
             style="cursor: pointer; border-color: black !important; border-width: 1px !important;">
               <div class="row g-0">
                 <div class="col-md-3 col-sm-4 ">
@@ -77,25 +76,39 @@
                     src="{{item.imagemCapa}}" 
                     class="img-fluid rounded-start" alt="...">
                 </div>
-                <div class="col-md-9 col-sm-8">
-                  <div class="card-body">
 
-                    <div class="border-bottom border-dark-subtle">
-                      <h5 class="card-title">{{item.titulo}}</h5>
+                <div class="col-md-9 col-sm-8 mt-3 px-3">
+                  <div class="border-bottom border-dark-subtle" style="display: flex;justify-content: space-between; align-items: center;">
+                    <h5 class="card-title">{{item.titulo}}</h5>
+                    <div 
+                      (click)="deleteDocumentation(item)"
+                      style="cursor: pointer;">
+                      <i class="bi bi-trash-fill" style="color: #FE786F;"></i>
                     </div>
+                  </div>
+
+                  <div (click)="carregarDocumentacao(item)" class="card-body">
+
 
                     <div class="mt-3 mx-3 mb-5" style="display: flex;">
-
-
-                      <!-- <div class="tag-success px-4" >Validado</div> -->
                       
+                      <!-- <div class="dropdown-content">
+                        <a *ngFor="let item of tagsList" style="cursor: pointer;">{{item.NomeTag}}</a>
+                      </div> -->
 
+                      <div 
+                          (click)="deletarTagDocumentacao(item.id, item.TagId)"
+                          *ngFor="let item of separarTags(item.tags)" 
+                          class="{{item.tagColor}} px-4 mx-1" >
+
+                          {{item.tagName}}
+                      </div>
                     </div>
 
-                    <p class="card-text"><small class="text-body-secondary">Ultima Alteração : {{item.user_alteracao}} | {{item.dh_alteracao}}</small></p>
+                    <p class="card-text"><small class="text-body-secondary">Ultima Alteração : {{item.usuarioAlteracao.nome}} | {{item.dataAlteracao}}</small></p>
                   </div>
+                  
                 </div>
-
               </div>
             </div>
   

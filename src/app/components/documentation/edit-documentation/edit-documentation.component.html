@@ -191,38 +191,64 @@
   >
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="saveDocModalLabel">
-            {{ documentationTitle }}, Version: V.{{ documentationVersion }}
-          </h1>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+        <div class="modal-header" style="flex-wrap: wrap; justify-content: space-around;">
+          <div style="width: 100%;text-align: end;">
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div>
+            <h1 class="modal-title fs-5" id="saveDocModalLabel">
+              {{ documentationTitle }}, Version: V.{{ documentationVersion }}
+            </h1>
+          </div>
+          <div for="tituloNewSection" class="text-secondary">Salvar Nova Versão da Documentação</div>
         </div>
         <div class="modal-body">
           <div class="mb-3">
-            <label for="tituloNewSection" class="form-label"
-              >Salvar Nova Versão da Documentação</label
+            
+            <div class="mb-3"
+              >Nova Versão : V.{{ documentationVersion + 1 }}</div
             >
 
-            <div class="input-group my-3">
-              <span class="input-group-text">Commit</span>
+            <div class="form-floating my-3">
               <textarea
+                id="CommitTextInp"
                 [(ngModel)]="documentationCommitText"
                 class="form-control"
                 aria-label="With textarea"
               ></textarea>
+              <label for="CommitTextInp">Commit Text</label>
+
+            </div>
+            
+            
+            <div class="form-floating my-3" style="height: 5rem;">
+              <ng-select 
+                    class="form-select my-3" 
+                    [multiple]="true" 
+                    [(ngModel)]="tagsSelecionadas" >
+
+                <ng-option *ngFor="let item of tagsList" [value]="item.IdTag">{{item.NomeTag}}</ng-option>
+              </ng-select>
+
+              <!-- <select [(ngModel)]="tagsSelecionadas"
+                      id="selectTags"
+                      style="height: 100%;"
+                      class="form-select my-3" 
+                      placeholder="Adicione Uma Tag, use o ctrl para multiplas" 
+                      aria-label="Adicione Uma Tag" 
+                      multiple>
+                <option class="my-1" *ngFor="let item of tagsList" value="{{item.IdTag}}">{{item.NomeTag}}</option>
+              </select> -->
+              <label for="selectTags">Selecione uma ou mais tags, "use o ctrl para multiplas"</label>
             </div>
 
-            <span class="my-3"
-              >Nova Versão : V.{{ documentationVersion + 1 }}</span
-            >
-
             <div class="mt-4">Sessões Carregadas:</div>
-            <ul class="list-group mx-3">
+            <ul class="list-group mx-3" style="height: 10rem; overflow: auto;">
               <ng-container *ngFor="let section of sections">
                 <li *ngIf="section.changes == 1" class="list-group-item">
                   {{ section.nome }}
@@ -390,7 +416,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="newSectionModalLabel">
-            New Section
+            Nova Aba
           </h1>
           <button
             type="button"
@@ -402,7 +428,7 @@
         <div class="modal-body">
           <div class="mb-3">
             <label for="tituloNewSection" class="form-label"
-              >Titulo da Section</label
+              >Titulo da Aba</label
             >
             <input
               required
@@ -414,7 +440,7 @@
             />
 
             <label for="selectNewSection" class="form-label"
-              >Tipo da Section</label
+              >Tipo da Aba</label
             >
             <select
               required
@@ -427,34 +453,7 @@
               <option value="2">Dicionario de Dados</option>
             </select>
 
-            <div *ngIf="tipoNovaSection == '2'">
-              <!-- <div class="input-group flex-nowrap my-2">
-                        <span class="input-group-text" id="addon-wrapping">🙋</span>
-                        <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping">
-                        
-                        <span class="input-group-text" id="addon-wrapping">🔑</span>
-                        <input type="text" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="addon-wrapping">
-                      
-                        
-                    </div>
-                    <div class="input-group flex-nowrap my-2">
-                        
-                        <span class="input-group-text" id="addon-wrapping">🏠</span>
-                        <input type="text" class="form-control" placeholder="Host" aria-label="Host" aria-describedby="addon-wrapping">
-
-                        <span class="input-group-text" id="addon-wrapping">🚪</span>
-                        <input type="text" class="form-control" placeholder="Port" aria-label="Port" aria-describedby="addon-wrapping">
-                    </div>
-                    <div class="input-group flex-nowrap my-2">
-
-                        <label class="input-group-text" for="sgbdSelection">Sgbd</label>
-                        <select class="form-select" id="sgbdSelection">
-                          <option selected>Choose...</option>
-                          <option value="1">Sql Server</option>
-                          <option value="2">Postgres</option>
-                        </select>
-                    </div> -->
-            </div>
+            <span class="text-danger">{{errorMessage}}</span>
           </div>
         </div>
         <div class="modal-footer">
@@ -466,9 +465,9 @@
             Close
           </button>
           <button
-            type="button"
             (click)="createSection()"
-            data-bs-dismiss="modal"
+            type="button"
+            
             class="btn btn-primary"
           >
             Adicionar

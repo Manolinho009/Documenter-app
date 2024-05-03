@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 import { User } from '../../models/user';
 import { CookieService } from 'ngx-cookie-service';
 import { StorageAcessService } from '../storage-acess.service';
+import { GlobalVariables } from '../../global-variables';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
-  private apiUrl = 'http://localhost:3000/user';
+  private apiUrl = GlobalVariables.BASE_API_URL+'/user';
   private user :User = new User(undefined,undefined,undefined);
 
 
@@ -29,6 +30,17 @@ export class LoginService {
     };
 
     return this.http.post<any>(this.apiUrl+'/login', usuario, httpOptions);
+  }
+
+  createUser(usuario: User): Observable<any> {
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+
+    return this.http.post<any>(this.apiUrl+'/create', usuario, httpOptions);
   }
 
 
