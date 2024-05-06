@@ -10,7 +10,8 @@ import { Documentation } from '../documentation';
 import { User } from '../../../models/user';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
-import { Select2Data } from 'ng-select2-component';
+import { TagService } from '../../../services/api/tag.service';
+import { Tag } from '../../../models/tag';
 declare const bootstrap: any; 
 
 @Component({
@@ -22,6 +23,11 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
 
 
   modalNewSection:any
+  modalCommit:any
+  modalTag:any
+
+  newTagColor:any = ''
+  newTagText:any = ''
 
   @Output() onUpdateStorage: EventEmitter<any> = new EventEmitter();
 
@@ -82,6 +88,7 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
     private storageAcessService:StorageAcessService,
     private loginService: LoginService,
     private documentationService:DocumentationService,
+    private tagService:TagService,
     private cookieService: CookieService,
     private router: Router
      ){
@@ -92,6 +99,36 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
      }
 
 
+
+  
+  createTag(){
+    console.log(this.newTagColor);
+    console.log(this.newTagText);
+
+    if(this.newTagText == ''){
+      
+      this.errorMessage = 'Preencha o Campo: Texto Tag'
+      return
+    }
+
+    const retorno = this.tagService.createTag(new Tag(this.newTagText, this.newTagColor))
+    retorno.subscribe(
+      response=>{
+        console.log(response.status);
+        this.errorMessage = response.status
+
+        this.limparCampos()
+        this.modalTag.hide()
+        this.modalCommit.show()
+        this.carregarTags()
+      },
+      error=>{
+        console.log(error.error.status);
+        this.errorMessage = error.error.status
+        
+      }
+    )
+  }
 
   limparCampos(){
     this.errorMessage = ''
@@ -104,12 +141,20 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
   }
 
   commit(){
-    
+
+
+    if (this.documentationCommitText == '') {
+      this.errorMessage = 'Preencha o campo: CommitText'
+      return
+    }
+
+
     this.sections.forEach((sec,i)=>{
       this.sections[i].changes = 0
     })
     
-    this.loadDocumentacao.version = this.documentationVersion + 1;
+    this.documentationVersion += 1
+    this.loadDocumentacao.version = this.documentationVersion;
     this.loadDocumentacao.commitText = this.documentationCommitText
     this.loadDocumentacao.tags = this.tagsSelecionadas
 
@@ -121,12 +166,17 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
     retorno.subscribe(
       response => {
         console.log(response);
+
+        this.documentationCommitText = ''
+        this.limparCampos()
+        
+        this.modalCommit.hide()
       },
       error => {
         console.log(error.error);
+        this.errorMessage = error.error
       }
     )
-    
   }
   
 
@@ -358,27 +408,9 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
     });
   }
 
-  ngOnInit(): void {
-    const loadDocumentacaoStorage = this.storageAcessService.changeStorage()
-    this.loadDocumentacao = new Documentation(
-      loadDocumentacaoStorage.titulo,
-      this.loginService.getUser(),
-      loadDocumentacaoStorage.descricao,
-      loadDocumentacaoStorage.sections,
-      loadDocumentacaoStorage.commitText,
-      loadDocumentacaoStorage.sectionsChanges,
-      loadDocumentacaoStorage.version,
-      loadDocumentacaoStorage.status,
-      loadDocumentacaoStorage.dh_alteracao,
-      
-    )
-    
-    this.loadDocumentacao.imagemCapa = loadDocumentacaoStorage.imagemCapa
-    this.sections = this.loadDocumentacao.sections
-    this.documentationTitle = this.loadDocumentacao.titulo
-    this.documentationVersion = parseFloat(this.loadDocumentacao.version)
 
-    
+
+  carregarTags(){
     const retornoTag = this.documentationService.listTags()
     retornoTag.subscribe(
       response => {
@@ -406,6 +438,32 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
     )
   }
 
+  ngOnInit(): void {
+    const loadDocumentacaoStorage = this.storageAcessService.changeStorage()
+
+    
+    this.loadDocumentacao = new Documentation(
+      loadDocumentacaoStorage.titulo,
+      this.loginService.getUser(),
+      loadDocumentacaoStorage.descricao,
+      loadDocumentacaoStorage.sections,
+      loadDocumentacaoStorage.commitText,
+      loadDocumentacaoStorage.sectionsChanges,
+      loadDocumentacaoStorage.versao,
+      loadDocumentacaoStorage.status,
+      loadDocumentacaoStorage.dh_alteracao,
+      
+    )
+    
+    this.loadDocumentacao.imagemCapa = loadDocumentacaoStorage.imagemCapa
+    this.sections = this.loadDocumentacao.sections
+    this.documentationTitle = this.loadDocumentacao.titulo
+    this.documentationVersion = parseFloat(this.loadDocumentacao.version)
+
+
+    this.carregarTags()
+  }
+
   
   ngAfterViewInit(): void {
     // Inicializa os popovers do Bootstrap
@@ -427,6 +485,8 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
     // Fecha o popover após 5 segundos
 
     this.modalNewSection = new bootstrap.Modal('#newSectionModal')
+    this.modalCommit = new bootstrap.Modal('#saveDocModal')
+    this.modalTag = new bootstrap.Modal('#novaTagModal')
 
   }
 

@@ -90,7 +90,7 @@
                   <div (click)="carregarDocumentacao(item)" class="card-body">
 
 
-                    <div class="mt-3 mx-3 mb-5" style="display: flex;">
+                    <div class="mt-3 mx-3 mb-5" style="display: flex;flex-wrap: wrap;">
                       
                       <!-- <div class="dropdown-content">
                         <a *ngFor="let item of tagsList" style="cursor: pointer;">{{item.NomeTag}}</a>
@@ -99,7 +99,7 @@
                       <div 
                           (click)="deletarTagDocumentacao(item.id, item.TagId)"
                           *ngFor="let item of separarTags(item.tags)" 
-                          class="{{item.tagColor}} px-4 mx-1" >
+                          class="{{item.tagColor}} px-4 mx-1 my-1" >
 
                           {{item.tagName}}
                       </div>

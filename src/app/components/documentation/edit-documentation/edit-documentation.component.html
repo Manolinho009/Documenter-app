@@ -182,6 +182,8 @@
 
 
   <!-- Save Documentatios Modal -->
+  <!-- ============================================================================================= -->
+
   <div
     class="modal fade"
     id="saveDocModal"
@@ -200,12 +202,14 @@
               aria-label="Close"
             ></button>
           </div>
-          <div>
+          <div style="width: 100%;">
             <h1 class="modal-title fs-5" id="saveDocModalLabel">
               {{ documentationTitle }}, Version: V.{{ documentationVersion }}
             </h1>
           </div>
-          <div for="tituloNewSection" class="text-secondary">Salvar Nova Versão da Documentação</div>
+          <div 
+            style="width: 100%;"
+            class="text-secondary">Salvar Nova Versão da Documentação</div>
         </div>
         <div class="modal-body">
           <div class="mb-3">
@@ -219,32 +223,34 @@
                 id="CommitTextInp"
                 [(ngModel)]="documentationCommitText"
                 class="form-control"
+                [ngClass]="{'is-invalid': documentationCommitText == '' && errorMessage != '' }"
                 aria-label="With textarea"
               ></textarea>
-              <label for="CommitTextInp">Commit Text</label>
+              <label for="CommitTextInp">Commit Text *</label>
 
             </div>
             
             
-            <div class="form-floating my-3" style="height: 5rem;">
-              <ng-select 
-                    class="form-select my-3" 
-                    [multiple]="true" 
-                    [(ngModel)]="tagsSelecionadas" >
+            <div class="form-floating" >
+              <div class="form-control" style="height: 100%;">
+                <div class="mb-2" style="width: 100%; text-align: end; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#novaTagModal" >
+                  <i class="bi bi-plus-circle-dotted"></i>
+                </div>
 
-                <ng-option *ngFor="let item of tagsList" [value]="item.IdTag">{{item.NomeTag}}</ng-option>
-              </ng-select>
-
-              <!-- <select [(ngModel)]="tagsSelecionadas"
+                <ng-select 
                       id="selectTags"
-                      style="height: 100%;"
-                      class="form-select my-3" 
-                      placeholder="Adicione Uma Tag, use o ctrl para multiplas" 
-                      aria-label="Adicione Uma Tag" 
-                      multiple>
-                <option class="my-1" *ngFor="let item of tagsList" value="{{item.IdTag}}">{{item.NomeTag}}</option>
-              </select> -->
-              <label for="selectTags">Selecione uma ou mais tags, "use o ctrl para multiplas"</label>
+                      [multiple]="true" 
+                      [(ngModel)]="tagsSelecionadas" >
+  
+                    <ng-option 
+                      *ngFor="let item of tagsList" 
+                      [value]="item.IdTag">
+                              {{item.NomeTag}}
+                    </ng-option>
+                </ng-select>
+              </div>
+
+              <label for="selectTags">Selecione uma ou mais tags</label>
             </div>
 
             <div class="mt-4">Sessões Carregadas:</div>
@@ -255,7 +261,8 @@
                 </li>
               </ng-container>
             </ul>
-          </div>
+            <span class="text-danger">{{errorMessage}}</span>
+          </div> 
         </div>
         <div class="modal-footer">
           <button
@@ -268,7 +275,6 @@
           <button
             type="submit"
             (click)="commit()"
-            data-bs-dismiss="modal"
             class="btn btn-primary"
           >
             Salvar
@@ -278,7 +284,83 @@
     </div>
   </div>
 
+
+  <!-- Modal Nova Tag -->
+  <!-- ============================================================================================= -->
+
+
+<div class="modal fade" id="novaTagModal" tabindex="-1" aria-labelledby="novaTagModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="novaTagModalLabel">Criar Nova Tag</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-floating">
+          <input 
+            [(ngModel)]="newTagText"
+            [ngClass]="{'is-invalid': newTagText == '' && errorMessage != '' }"
+            class="form-control"
+            id="TexttoTag"
+            placeholder="Texto Tag">
+          <label for="TexttoTag">Texto Tag</label>
+        </div>
+
+        <div class="mt-2">
+          <div class="my-2" style="display: flex; justify-content: center;">
+            <div class="my-2 mx-1" style="width: 2rem; height: 2rem; text-align: center; background: #8BEE9B; border-radius: 20%;">
+              <input 
+              [(ngModel)]="newTagColor"
+              value="tag-success"
+              class="form-check-input"
+              style="margin-top: 0.5rem;"
+              type="radio"
+              name="CoresRadio"
+              id="CoresRadio1"
+              checked
+              >
+            </div>
+            <div class="my-2 mx-1" style="width: 2rem; height: 2rem; text-align: center; background: #FE786F; border-radius: 20%;">
+              <input 
+              [(ngModel)]="newTagColor"
+              value="tag-danger"
+              class="form-check-input"
+              style="margin-top: 0.5rem;"
+              type="radio"
+              name="CoresRadio"
+              id="CoresRadio2"
+              >
+            </div>
+            <div class="my-2 mx-1" style="width: 2rem; height: 2rem; text-align: center; background: #EEC08B; border-radius: 20%;">
+              <input 
+              [(ngModel)]="newTagColor"
+              value="tag-warning"
+              class="form-check-input" 
+              style="margin-top: 0.5rem;" 
+              type="radio"
+              name="CoresRadio"
+              id="CoresRadio2"
+              >
+            </div>
+          </div>
+
+          <span class="text-danger">{{errorMessage}}</span>
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" (click)="createTag()" class="btn btn-primary">Adicionar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
   <!-- Modal Nova Procedure -->
+  <!-- ============================================================================================= -->
+
   <div
     class="modal fade"
     id="NovaProcedureModal"
@@ -342,6 +424,8 @@
   </div>
 
   <!-- Modal Nova Tabela -->
+  <!-- ============================================================================================= -->
+
   <div
     class="modal fade"
     id="NovaTabelaModal"
@@ -405,6 +489,8 @@
   </div>
 
   <!-- New Section Modal -->
+  <!-- ============================================================================================= -->
+
   <div
     class="modal fade"
     id="newSectionModal"
