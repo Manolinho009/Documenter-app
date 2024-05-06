@@ -119,7 +119,7 @@
                         (onEditProcedure)="editProcedures($event)"
                         *ngFor="let slt of sectionProcedures; let i = index"
                         [index]="i"
-                        [descricaoProcedure]="slt.descricaoProcedure"
+                        [descricaoProcedure]="slt.descricao"
                         [titulo]="slt.titulo"
                         [dh_alteracao]="slt.dh_alteracao"
                         [params]="slt.params"
@@ -143,7 +143,7 @@
                       (onDeleteTable)="deleteTable($event)"
                       *ngFor="let slt of sectionTables; let i = index"
                       [index]="i"
-                      [descricaoTabela]="slt.descricaoTabela"
+                      [descricaoTabela]="slt.descricao"
                       [titulo]="slt.titulo"
                       [dh_alteracao]="slt.dh_alteracao"
                       [colunas]="slt.colunas"
@@ -164,10 +164,24 @@
       <div *ngFor="let section of sections; let i = index" 
             class="border-bottom border-dark-subtle my-5"
             >
+            <div style="display: flex;">
+              <div 
+                (click)="copiarTexto('?to='+section.nome)" 
+                class="text-secondary hoverIcon mx-1" 
+                style="cursor: pointer;">
+                  <i class="bi bi-link-45deg"></i>
+              </div>
+              <div 
+                (click)="deleteSection(i)" 
+                class="text-danger hoverIcon mx-1" 
+                style="cursor: pointer;">
+                <i class="bi bi-trash-fill"></i>
+              </div>
+            </div>
         <div 
             [ngClass]="{'border-bottom border-dark-subtle': sectionAtiva == i}"
             (click)="selectSection(section, i)"
-            class="container-fluid " 
+            class="container-fluid hoverIcon" 
             style="display: flex;justify-content: flex-end;border-color: #8BEE9B !important; cursor: pointer;">
           <h6 class="display-6" style="font-size: 12pt;"> 
             {{ section.nome }}
@@ -253,7 +267,7 @@
               <label for="selectTags">Selecione uma ou mais tags</label>
             </div>
 
-            <div class="mt-4">Sessões Carregadas:</div>
+            <div class="mt-4">Abas Carregadas:</div>
             <ul class="list-group mx-3" style="height: 10rem; overflow: auto;">
               <ng-container *ngFor="let section of sections">
                 <li *ngIf="section.changes == 1" class="list-group-item">

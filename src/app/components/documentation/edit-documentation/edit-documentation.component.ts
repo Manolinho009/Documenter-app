@@ -149,15 +149,26 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
     }
 
 
+    this.loadDocumentacao.sectionsChanges = []
+
     this.sections.forEach((sec,i)=>{
+      
+      if(sec.changes == 1){
+        this.loadDocumentacao.sectionsChanges.push(sec) 
+        console.log(sec);
+      }
+
       this.sections[i].changes = 0
+
     })
     
     this.documentationVersion += 1
     this.loadDocumentacao.version = this.documentationVersion;
     this.loadDocumentacao.commitText = this.documentationCommitText
     this.loadDocumentacao.tags = this.tagsSelecionadas
-
+    
+    console.log(this.loadDocumentacao.sectionsChanges);
+    
     this.updateStorage()
 
     const retorno = this.documentationService.updateDocumentation(
@@ -199,7 +210,12 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
     this.loadDocumentacao.sections = this.sections
     this.updateStorage()
 
-    this.selectSection(this.sections[0],0)
+    if(this.sections.length > 0){
+      this.selectSection(this.sections[0],0)
+    }else{
+      this.sectionAtiva = 9999
+      this.tipoSectionAtiva = ''
+    }
   }
 
   createSection(){
@@ -330,15 +346,17 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
 
   editTabelas(table:any){
 
-    console.log(table);
+    console.log('dojfndspijndfiounsfpib',table);
     
     this.editTableComponents.forEach(editTableComponent => {
       
       if( editTableComponent.index == table.index ) {
-        this.sectionProcedures[editTableComponent.index].descricaoTabela = table.descricaoTabela
-        this.sectionProcedures[editTableComponent.index].titulo = table.titulo
-        this.sectionProcedures[editTableComponent.index].colunas = table.colunas
-        this.sectionProcedures[editTableComponent.index].dh_alteracao = table.dh_alteracao
+        console.log(this.sectionTables);
+        
+        this.sectionTables[editTableComponent.index].descricao = table.descricaoTabela
+        this.sectionTables[editTableComponent.index].titulo = table.titulo
+        this.sectionTables[editTableComponent.index].colunas = table.colunas
+        this.sectionTables[editTableComponent.index].dh_alteracao = table.dh_alteracao
       }
     });
 
@@ -375,7 +393,7 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
     this.editProcedureComponents.forEach(editProcedureComponent => {
       
       if( editProcedureComponent.index == procedure.index ) {
-        this.sectionProcedures[editProcedureComponent.index].descricaoProcedure = procedure.descricaoProcedure
+        this.sectionProcedures[editProcedureComponent.index].descricao = procedure.descricaoProcedure
         this.sectionProcedures[editProcedureComponent.index].params = procedure.params
         this.sectionProcedures[editProcedureComponent.index].titulo = procedure.titulo
         this.sectionProcedures[editProcedureComponent.index].dh_alteracao = procedure.dh_alteracao

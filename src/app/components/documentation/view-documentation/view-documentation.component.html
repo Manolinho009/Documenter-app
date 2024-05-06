@@ -70,7 +70,7 @@
 
             <div class="col-md-3">
                 <nav class="docs-sidebar" data-spy="affix" data-offset-top="300" data-offset-bottom="200" role="navigation">
-                    <ul class="nav">
+                    <ul class="nav" style="display: block;">
                         <li *ngFor="let section of sections; let i = index" >
                           <a 
                           style="cursor: pointer;"
@@ -95,11 +95,16 @@
                                     <div class="intro1">
                                         <ul>
                                             <li><strong>Versão : </strong> V {{loadDocumentacao.version}}</li>
-                                            <li><strong>Alterado por  : </strong> {{loadDocumentacao.userChanges}}</li>
+                                            <li><strong>Alterado por  : </strong> {{loadDocumentacao.user_alteracao.nome}}</li>
                                             <li><strong>Ultimas Atualizações : </strong> 
-                                                <ul>
-                                                    <li *ngFor="let item of loadDocumentacao.sectionsChanges">{{item}}</li>
-                                                </ul>
+
+                                              <ul class="list-group my-2">
+                                                <ng-container *ngFor="let section of sections">
+                                                  <li *ngIf="section.changes == 1" class="list-group-item">
+                                                    {{ section.nome }}
+                                                  </li>
+                                                </ng-container>
+                                              </ul>
                                             </li>
                                             <li><strong>Data Atualização : </strong> {{loadDocumentacao.dh_alteracao}}</li>
                                         </ul>
@@ -139,33 +144,33 @@
 
                               <div
                                 class="accordion"
-                                id="accordionExample-{{ section.nome }}"
+                                id="accordionExample-{{ prepararIndice(section.nome) }}"
                               >
-                                <div class="accordion-item">
+                                <div *ngIf="section.tables.length > 0" class="accordion-item">
                                   <h2
                                     class="accordion-header"
-                                    id="headingOne-{{ section.nome }}"
+                                    id="headingOne-{{ prepararIndice(section.nome) }}"
                                   >
                                     <button
                                       class="accordion-button"
                                       type="button"
                                       data-bs-toggle="collapse"
                                       [attr.data-bs-target]="
-                                        '#collapseOne-' + section.nome
+                                        '#collapseOne-' + prepararIndice(section.nome)
                                       "
-                                      aria-expanded="true"
+                                      aria-expanded="false"
                                       aria-controls="collapseOne"
                                     >
                                       Tabelas
                                     </button>
                                   </h2>
                                   <div
-                                    id="collapseOne-{{ section.nome }}"
+                                    id="collapseOne-{{ prepararIndice(section.nome) }}"
                                     class="accordion-collapse collapse"
                                     style="visibility: visible"
                                     aria-labelledby="headingOne"
                                     [attr.data-bs-target]="
-                                      '#accordionExample-' + section.nome
+                                      '#accordionExample-' + prepararIndice(section.nome)
                                     "
                                     data-bs-parent="#accordionExample"
                                   >
@@ -186,17 +191,17 @@
                                     </div>
                                   </div>
                                 </div>
-                                <div class="accordion-item">
+                                <div  *ngIf="section.procedures.length > 0" class="accordion-item">
                                   <h2
                                     class="accordion-header"
-                                    id="headingTwo-{{ section.nome }}"
+                                    id="headingTwo-{{ prepararIndice(section.nome) }}"
                                   >
                                     <button
                                       class="accordion-button collapsed"
                                       type="button"
                                       data-bs-toggle="collapse"
                                       [attr.data-bs-target]="
-                                        '#collapseTwo-' + section.nome
+                                        '#collapseTwo-' + prepararIndice(section.nome)
                                       "
                                       aria-expanded="false"
                                       aria-controls="collapseTwo"
@@ -205,11 +210,12 @@
                                     </button>
                                   </h2>
                                   <div
-                                    id="collapseTwo-{{ section.nome }}"
+                                    id="collapseTwo-{{ prepararIndice(section.nome) }}"
                                     class="accordion-collapse collapse"
+                                    style="visibility: visible"
                                     aria-labelledby="headingTwo"
                                     [attr.data-bs-target]="
-                                      '#accordionExample-' + section.nome
+                                      '#accordionExample-' + prepararIndice(section.nome)
                                     "
                                   >
                                     <div class="accordion-body">

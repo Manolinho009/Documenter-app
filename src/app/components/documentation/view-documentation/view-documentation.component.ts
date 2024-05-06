@@ -16,12 +16,23 @@ export class ViewDocumentationComponent implements OnInit{
 
   caminhoAtual:any = location.href
   
-  
+  constProc:any = 0
+  constTable:any = 0
+
+
   constructor(
     private scrollService: ScrollService, 
     private storageAcessService:StorageAcessService,
     private changeDetectorRef:ChangeDetectorRef
     ) { }
+  
+
+  prepararIndice(indice:any){
+    const gerarHash = (texto:string) => texto.split('').reduce((prev, curr) =>
+      Math.imul(31, prev) + curr.charCodeAt(0) | 0, 0).toString(16);
+
+    return  gerarHash(indice);
+  }
   
   recarregarViewComponent() {
     this.changeDetectorRef.detectChanges(); 
@@ -39,5 +50,18 @@ export class ViewDocumentationComponent implements OnInit{
   ngOnInit():void {
     this.loadDocumentacao=this.storageAcessService.changeStorage()
     this.sections = this.loadDocumentacao.sections
-  }
+
+
+    this.sections.map((value)=>{ 
+      
+      if(value.tipo == 1){
+        this.constTable = 1
+      }
+      if(value.tipo == 2){
+        this.constProc = 1
+      }
+    
+    });
+  };
+    
 }

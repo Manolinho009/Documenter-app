@@ -80,10 +80,21 @@
                 <div class="col-md-9 col-sm-8 mt-3 px-3">
                   <div class="border-bottom border-dark-subtle" style="display: flex;justify-content: space-between; align-items: center;">
                     <h5 class="card-title">{{item.titulo}}</h5>
-                    <div 
-                      (click)="deleteDocumentation(item)"
-                      style="cursor: pointer;">
-                      <i class="bi bi-trash-fill" style="color: #FE786F;"></i>
+                    <div style="display: flex;">
+                      <div 
+                        class="mx-2"
+                        (click)="carregarListaUsuarios(item)"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#userDocumentationModal"
+                        style="cursor: pointer;">
+                        <i class="bi bi-people-fill"></i>
+                      </div>
+                      <div 
+                        class="mx-2"
+                        (click)="deleteDocumentation(item)"
+                        style="cursor: pointer;">
+                        <i class="bi bi-trash-fill" style="color: #FE786F;"></i>
+                      </div>
                     </div>
                   </div>
 
@@ -105,7 +116,7 @@
                       </div>
                     </div>
 
-                    <p class="card-text"><small class="text-body-secondary">Ultima Alteração : {{item.usuarioAlteracao.nome}} | {{item.dataAlteracao}}</small></p>
+                    <p class="card-text"><small class="text-body-secondary">Ultima Alteração : {{item.user_alteracao.nome}} | {{item.dh_alteracao}}</small></p>
                   </div>
                   
                 </div>
@@ -171,6 +182,63 @@
                 class="btn btn-primary" 
                 data-bs-dismiss="modal"
         >Alterar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- MODAL USER DOCUMENTATIONS -->
+<!-- ======================================================================= -->
+
+<div class="modal fade" id="userDocumentationModal" tabindex="-1" aria-labelledby="userDocumentationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="userDocumentationModalLabel">Gerir Usuarios: </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex;width: 100%; justify-content: flex-end;">
+          <div style="cursor: pointer;" (click)="addUserDocumentation(46)">
+            <i class="bi bi-person-fill-add"></i>
+          </div>
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item" style="display: flex;justify-content: space-between;" *ngFor="let user of documentationUserLists">
+            <div>
+              {{user.nome}}
+              <span class="text-secondary"> - {{user.funcao}}</span>
+            </div>
+
+            <div>
+              <i class="bi bi-people-fill"></i>
+              <div *ngIf="user.id != loginService.getUser().id">
+                <div 
+                    class="mx-2"
+                    style="cursor: pointer;">
+                    <i class="bi bi-trash-fill" style="color: #FE786F;"></i>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>

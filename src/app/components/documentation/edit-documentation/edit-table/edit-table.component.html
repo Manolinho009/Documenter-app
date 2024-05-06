@@ -1,13 +1,13 @@
-<div class="container mt-4" style="height: 9999vh;">
+<div class="container mt-4" >
   <div class="container" style="display: flex; flex-direction: row; flex-wrap: nowrap; align-items: baseline; justify-content: flex-start;">
     <h4>{{ titulo }}: </h4>
     <span class="mx-2 text-secondary">{{ descricaoTabela }}</span>
 
 
-    <i class="bi bi-trash-fill mx-5" style="color: #FE786F;"></i>
+    <i class="bi bi-trash-fill mx-5" style="color: #FE786F; cursor: pointer;" (click)="deleteThisTable()"></i>
   </div>
 
-  <div class="container mt-5" style="display: flex;">
+  <div class="container mt-5" style="display: flex;width: 100%; overflow: auto;">
     
     <table class="table">
       <thead>
@@ -137,7 +137,7 @@
             />
           </td>
 
-          <button style="border: none" (click)="dellColuna(i)">
+          <button *ngIf="!viewOnly" style="border: none" (click)="dellColuna(i)">
             <i class="bi bi-trash3-fill" style="color: #d31a1a"></i>
           </button>
         </tr>

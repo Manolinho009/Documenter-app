@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { Documentation } from '../../components/documentation/documentation';
 import { GlobalVariables } from '../../global-variables';
+import { User } from '../../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,28 @@ export class DocumentationService {
     private http: HttpClient,
     private cookieService: CookieService
   ) { }
+
+
+  addUsersDocumentation(documentation:Documentation, user:any){
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': this.cookieService.get('token')
+      })
+    };
+    
+    return this.http.post<any>(this.apiUrl+'/user/add', {'documentation':documentation, 'idUser':user}, httpOptions);
+  }
+  selectUsersDocumentation(documentation:Documentation){
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': this.cookieService.get('token')
+      })
+    };
+    
+    return this.http.post<any>(this.apiUrl+'/users', documentation, httpOptions);
+  }
 
 
   updateDocumentation(documentation:Documentation){

@@ -104,7 +104,7 @@
             />
           </td>
 
-          <button style="border: none" (click)="dellParam(i)">
+          <button *ngIf="!viewOnly" style="border: none" (click)="dellParam(i)">
             <i class="bi bi-trash3-fill" style="color: #d31a1a"></i>
           </button>
         </tr>

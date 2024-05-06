@@ -1,10 +1,9 @@
 .hoverIcon:hover {
     opacity: 1;
-    font-size: 1.7rem;
+    transform: scale(1.05);
 }
 .hoverIcon {
     opacity: 0.6;
-    font-size: 1.5rem;
 }
 
 

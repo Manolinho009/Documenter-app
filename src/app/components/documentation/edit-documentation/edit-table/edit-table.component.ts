@@ -68,6 +68,8 @@ export class EditTableComponent {
     };
 
     this.titulo = titulo
+    console.log(descricaoTabela);
+    
     this.descricaoTabela = descricaoTabela
     this.colunas[this.editIndex] = this.coluna
 
