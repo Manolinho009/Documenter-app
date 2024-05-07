@@ -21,6 +21,12 @@ export class LoginService {
     private storageAcessService: StorageAcessService
   ) { }
 
+  getAllUser(): Observable<any> {
+
+    return this.http.get<any>(this.apiUrl+'/all');
+  }
+
+
   authUser(usuario: User): Observable<any> {
 
     const httpOptions = {

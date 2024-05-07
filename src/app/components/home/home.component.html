@@ -212,8 +212,30 @@
       </div>
       <div class="modal-body">
         <div style="display: flex;width: 100%; justify-content: flex-end;">
-          <div style="cursor: pointer;" (click)="addUserDocumentation(46)">
-            <i class="bi bi-person-fill-add"></i>
+          
+          <div class="dropdown" id="dropDownUsers">
+            
+            <div  data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" style="cursor: pointer;">
+              <i class="bi bi-person-fill-add"></i>
+            </div>
+
+            <div class="dropdown-menu p-2">
+              <div class="mb-3">
+
+                <div class="form-floating">
+                  <input [(ngModel)]="addUserDocumentationValue" list="listUserOptions" class="form-control" id="UserName">
+                  <label for="UserName">Nome do Usuario</label>
+                </div>
+                <datalist id="listUserOptions">
+                  <option *ngFor="let item of usersList" value="{{item.id}} - {{item.nome}}: {{item.funcao}}">
+                </datalist>
+
+                <div class="text-danger">{{errorMessage}}</div>
+              </div>
+             
+              <button  (click)="addUserDocumentation()" data-bs-toggle="dropdown" data-bs-reference="parent" class="btn btn-primary">Add</button>
+            </div>
+
           </div>
         </div>
         <ul class="list-group">
@@ -223,10 +245,13 @@
               <span class="text-secondary"> - {{user.funcao}}</span>
             </div>
 
-            <div>
-              <i class="bi bi-people-fill"></i>
+            <div style="display: flex;">
+              <div  *ngIf="user.id == loginService.getUser().id">
+                <i class="bi bi-people-fill"></i>
+              </div>
               <div *ngIf="user.id != loginService.getUser().id">
-                <div 
+                <div
+                    (click)="deleteUserDocumentation(user)"
                     class="mx-2"
                     style="cursor: pointer;">
                     <i class="bi bi-trash-fill" style="color: #FE786F;"></i>
@@ -236,10 +261,10 @@
           </li>
         </ul>
       </div>
-      <div class="modal-footer">
+      <!-- <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+      </div> -->
     </div>
   </div>
 </div>

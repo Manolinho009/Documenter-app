@@ -7,6 +7,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { ImageService } from '../../services/image.service';
 import { Documentation } from '../documentation/documentation';
 import { User } from '../../models/user';
+declare const bootstrap: any; 
 
 @Component({
   selector: 'app-home',
@@ -16,13 +17,18 @@ import { User } from '../../models/user';
 export class HomeComponent implements OnInit {
 
 
+  dropdownUsers:any 
+
   documentationUserLists: any = []
   documentationEdit:Documentation = new Documentation('',new User('','',''))
 
+  addUserDocumentationValue:any = ''
+  usersList:any = []
 
   listDocumentations : any = []
   imagemPerfilSelecionada:any = undefined
 
+  errorMessage:any = ''
 
   constructor(
     private storageAcessService : StorageAcessService
@@ -33,16 +39,44 @@ export class HomeComponent implements OnInit {
     , private imageService : ImageService
   ){}
 
+  deleteUserDocumentation(user:any){
+    console.log(user);
+    
+    const retorno = this.documentationService.deleteUsersDocumentation(this.documentationEdit,user)
+    retorno.subscribe(
+      response=>{
+        console.log(response);
+        this.errorMessage = ''
+        this.carregarListaUsuarios(this.documentationEdit)
+      }
+      ,error=>{
+        console.log(error.error.status);
 
-  addUserDocumentation(idUser:any){
+        this.errorMessage = error.error.status
+      }
+    )
+  }
+
+  addUserDocumentation(){
+    
+    const selectedUser = this.addUserDocumentationValue
+    let idUser = selectedUser.split('-')[0]
+
+
     const retorno = this.documentationService.addUsersDocumentation(this.documentationEdit,idUser)
     retorno.subscribe(
       response=>{
         console.log(response);
         
+        this.dropdownUsers.hide()
+        this.errorMessage = ''
+        this.carregarListaUsuarios(this.documentationEdit)
       }
       ,error=>{
-        console.log(error);
+        console.log(error.error.status);
+
+        this.errorMessage = error.error.status
+        
         
       }
     )
@@ -80,12 +114,6 @@ export class HomeComponent implements OnInit {
     )
 
   }
-
-
-
-
-
-
 
 
 
@@ -175,8 +203,44 @@ export class HomeComponent implements OnInit {
   }
 
 
+  ngAfterViewInit(): void {
+
+    const dropdownElement = document.querySelector('#dropDownUsers')
+    console.log(dropdownElement);
+    const dropdownUsers = new bootstrap.Dropdown(dropdownElement)
+    console.log(dropdownUsers);
+
+    this.dropdownUsers = dropdownUsers
+    
+  }
+
   ngOnInit(): void {
     
+    const retornoUsuarios = this.loginService.getAllUser()
+    retornoUsuarios.subscribe(
+      response=>{
+        console.log(response);
+        
+        response.map((value: any)=>{
+            let user = new User(
+              value.login
+              ,''
+              ,value.nome
+            )
+            user.imagem = value.imagem
+            user.id = value.id
+            user.funcao = value.funcao
+
+            this.usersList.push(user)
+        })
+      }
+      ,error=>{
+        console.log(error);
+        
+      }
+    )
+
+
     const retorno = this.documentationService.listDocumentations()
     retorno.subscribe(
       response => {
@@ -201,7 +265,6 @@ export class HomeComponent implements OnInit {
           
         });
 
-        console.log(docs);
         this.listDocumentations = docs
       },
       error => {

@@ -17,6 +17,16 @@ export class DocumentationService {
   ) { }
 
 
+  deleteUsersDocumentation(documentation:Documentation, user:any){
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': this.cookieService.get('token')
+      })
+    };
+    
+    return this.http.post<any>(this.apiUrl+'/user/dell', {'documentation':documentation, 'idUser':user.id}, httpOptions);
+  }
   addUsersDocumentation(documentation:Documentation, user:any){
     const httpOptions = {
       headers: new HttpHeaders({
