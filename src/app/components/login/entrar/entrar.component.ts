@@ -27,40 +27,23 @@ export class EntrarComponent {
 
 
   verificaAuthUsuario(AuthResponse:any){
-
-    console.log(AuthResponse.imagem);
+    const user = this.loginService.verificaAuthUser(AuthResponse);
+    console.log(user);
     
-    if('user' in AuthResponse){
-      console.log('Usuario Authenticado :', AuthResponse.login);
-
-      // this.cookieService.set('userImage', AuthResponse.imagem);
-      this.cookieService.set('user', JSON.stringify(AuthResponse.user));
-      this.cookieService.set('token', AuthResponse.token);
-
-      let user = new User('', '','')
-
-      user.nome = AuthResponse.user.nome
-      user.funcao = AuthResponse.user.funcao
-      user.imagem = AuthResponse.imagem
-      user.login = AuthResponse.user.login
-      user.id = AuthResponse.user.id
-
-      this.loginService.setUser(user)
-      
+    if(user){
       this.router.navigate(['/'])
-    }
-    else{
+    }else{
       this.errorMessage = AuthResponse.status
-      console.error('Erro ao Authenticar usuário:', AuthResponse);
     }
   }
 
   onLogin(){
 
     const user = new User(
-      this.login
-      , this.password
-      , undefined
+      {
+          login : this.login
+        , password : this.password
+      }
     )
 
     const authenticated = this.loginService.authUser(user)

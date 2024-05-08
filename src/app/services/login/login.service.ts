@@ -11,7 +11,7 @@ import { GlobalVariables } from '../../global-variables';
 })
 export class LoginService {
   private apiUrl = GlobalVariables.BASE_API_URL+'/user';
-  private user :User = new User(undefined,undefined,undefined);
+  private user :User = new User();
 
 
 
@@ -59,7 +59,6 @@ export class LoginService {
     };
 
     this.user.imagem = usuario.imagem
-    // this.cookieService.set('imagemPerfil', usuario.imagem)
     this.storageAcessService.setValue('imagemPerfil',{'image':usuario.imagem})
     
     return this.http.post<any>(this.apiUrl+'/image', usuario, httpOptions);
@@ -70,8 +69,17 @@ export class LoginService {
   }
 
   setUser(user:User): User{
+
+    this.cookieService.set('user','');
     this.user = user
+    
     this.storageAcessService.setValue('imagemPerfil',{'image':user.imagem})
+
+    // Apaga a imagem do cookie para conseguir armazenar o valor
+    user.imagem = ''
+    const userVal =  JSON.stringify(user)
+    this.cookieService.set('user',userVal);
+
     return this.user
   }
 
@@ -82,20 +90,36 @@ export class LoginService {
     if(user){
       
       const userJson = JSON.parse(user)
+      userJson.imagem = imageUser.image
       const userNew = new User(
-        userJson.login
-        ,undefined
-        ,userJson.nome
+        userJson
       )
-      userNew.id = userJson.id
-      userNew.imagem = imageUser.image//this.user.imagem 
-      userNew.funcao = userJson.funcao
 
       this.user = userNew
       return true
     }
     else{
       return false
+    }
+  }
+
+
+
+  verificaAuthUser(AuthResponse:any){
+    
+    if('user' in AuthResponse){
+      console.log('Usuario Authenticado :', AuthResponse.user);
+
+      this.cookieService.set('token', AuthResponse.token);
+
+      let user = new User(AuthResponse.user)
+      this.setUser(user)
+
+      return user
+    }
+    else{
+      console.error('Erro ao Authenticar usuário:', AuthResponse);
+      return undefined
     }
   }
 

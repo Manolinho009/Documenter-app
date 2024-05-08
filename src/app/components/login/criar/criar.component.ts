@@ -36,13 +36,21 @@ export class CriarComponent {
       this.cookieService.set('user', JSON.stringify(AuthResponse.user));
       this.cookieService.set('token', AuthResponse.token);
 
-      let user = new User('', '','')
+      let user = new User(
+        {
+          nome: AuthResponse.user.nome
+          , funcao: AuthResponse.user.funcao
+          , imagem: AuthResponse.imagem
+          , login: AuthResponse.user.login
+          , id: AuthResponse.user.id
+        }
+      )
 
-      user.nome = AuthResponse.user.nome
-      user.funcao = AuthResponse.user.funcao
-      user.imagem = AuthResponse.imagem
-      user.login = AuthResponse.user.login
-      user.id = AuthResponse.user.id
+      // user.nome = AuthResponse.user.nome
+      // user.funcao = AuthResponse.user.funcao
+      // user.imagem = AuthResponse.imagem
+      // user.login = AuthResponse.user.login
+      // user.id = AuthResponse.user.id
 
       this.loginService.setUser(user)
       
@@ -92,9 +100,10 @@ export class CriarComponent {
 
     if (this.password == this.passwordConfirm){
       let user = new User(
-        this.login
-        , this.password
-        , ''
+        {
+        login: this.login
+        , password: this.password
+        }
       )
 
 

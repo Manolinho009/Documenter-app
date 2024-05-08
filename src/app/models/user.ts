@@ -1,21 +1,26 @@
 export class User {
     
-    login:string
-    password:string 
-    nome:string | undefined
     id:number = 0
-    funcao:string = ''
     
+    nome:string | undefined
+    funcao:string = ''
     imagem:string = ''
 
-    constructor(
-        login:any
-        , password:any
-        , nome:any | undefined
-    ){
-        this.login = login
-        this.password = password
-        this.nome = nome
+    acesso:string = ''
+    editar:boolean = false
+    criar:boolean = false
+    apagar:boolean = false
+    
+    projetos:string[] = []
 
+    login:string = ''
+    password:string = ''
+
+    constructor(
+        userJson : Partial<User> | undefined = undefined
+    ){
+        if(userJson){
+            Object.assign(this, userJson);
+        }
     }
 }

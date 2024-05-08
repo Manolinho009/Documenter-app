@@ -90,6 +90,7 @@
                         <i class="bi bi-people-fill"></i>
                       </div>
                       <div 
+                        *ngIf="item.acessoUsuario && item.acessoUsuario.deletar == 1"
                         class="mx-2"
                         (click)="deleteDocumentation(item)"
                         style="cursor: pointer;">
@@ -108,15 +109,15 @@
                       </div> -->
 
                       <div 
-                          (click)="deletarTagDocumentacao(item.id, item.TagId)"
-                          *ngFor="let item of separarTags(item.tags)" 
-                          class="{{item.tagColor}} px-4 mx-1 my-1" >
+                          (click)="deletarTagDocumentacao(item.id, item.IdTag)"
+                          *ngFor="let item of item.tags" 
+                          class="{{item.CorTag}} px-4 mx-1 my-1" >
 
-                          {{item.tagName}}
+                          {{item.NomeTag}}
                       </div>
                     </div>
 
-                    <p class="card-text"><small class="text-body-secondary">Ultima Alteração : {{item.user_alteracao.nome}} | {{item.dh_alteracao}}</small></p>
+                    <p class="card-text"><small class="text-body-secondary">Ultima Alteração : {{item.usuarioAlteracao.nome}} | {{item.dataAlteracao}}</small></p>
                   </div>
                   
                 </div>
@@ -215,7 +216,7 @@
           
           <div class="dropdown" id="dropDownUsers">
             
-            <div  data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" style="cursor: pointer;">
+            <div *ngIf="documentationEdit && documentationEdit.acessoUsuario && documentationEdit.acessoUsuario.editar == 1" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" style="cursor: pointer;">
               <i class="bi bi-person-fill-add"></i>
             </div>
 
@@ -233,32 +234,49 @@
                 <div class="text-danger">{{errorMessage}}</div>
               </div>
              
-              <button  (click)="addUserDocumentation()" data-bs-toggle="dropdown" data-bs-reference="parent" class="btn btn-primary">Add</button>
+              <button  (click)="addUserDocumentation()" class="btn btn-primary">Add</button>
             </div>
 
           </div>
         </div>
         <ul class="list-group">
-          <li class="list-group-item" style="display: flex;justify-content: space-between;" *ngFor="let user of documentationUserLists">
-            <div>
-              {{user.nome}}
-              <span class="text-secondary"> - {{user.funcao}}</span>
-            </div>
-
-            <div style="display: flex;">
-              <div  *ngIf="user.id == loginService.getUser().id">
-                <i class="bi bi-people-fill"></i>
+          <ng-container *ngFor="let user of documentationUserLists">
+            <li class="list-group-item" style="display: flex;justify-content: space-between;" 
+              *ngIf="user.id == loginService.getUser().id">
+  
+              <div>
+                {{user.nome}}
+                <span class="text-secondary"> - {{user.funcao}}</span>
               </div>
-              <div *ngIf="user.id != loginService.getUser().id">
-                <div
-                    (click)="deleteUserDocumentation(user)"
-                    class="mx-2"
-                    style="cursor: pointer;">
-                    <i class="bi bi-trash-fill" style="color: #FE786F;"></i>
+  
+              <div style="display: flex;">
+                <div>
+                  <i class="bi bi-people-fill"></i>
                 </div>
               </div>
-            </div>
-          </li>
+            </li>
+            <li class="list-group-item" style="display: flex;justify-content: space-between;" 
+              *ngIf="user.id != loginService.getUser().id">
+  
+              <div>
+                {{user.nome}}
+                <span class="text-secondary"> - {{user.funcao}}</span>
+              </div>
+  
+              <div style="display: flex;">
+                <div>
+                  <div 
+                      *ngIf="documentationEdit && documentationEdit.acessoUsuario && documentationEdit.acessoUsuario.editar == 1"
+                      (click)="deleteUserDocumentation(user)"
+                      class="mx-2"
+                      style="cursor: pointer;">
+                      <i class="bi bi-trash-fill" style="color: #FE786F;"></i>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ng-container>
+          
         </ul>
       </div>
       <!-- <div class="modal-footer">

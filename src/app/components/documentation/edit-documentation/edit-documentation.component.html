@@ -6,7 +6,7 @@
         (click)="goTo('/')"
         class="mt-3 mx-3">
         <i style="cursor: pointer;"  
-          class="fs-3 bi bi-box-arrow-left"
+          class="bi bi-arrow-bar-left fs-3"
           ></i>
       </div>
 
@@ -66,7 +66,7 @@
   <div class="row">
     <div class="col-9">
       
-      <div class="mx-2 ps-3 mt-4" *ngIf="tipoSectionAtiva == '1'">
+      <div class="mx-2 ps-3 mt-4" *ngIf="tipoAbaAtiva == '1'">
           <div
             [(ngModel)]="conteudoEditor"
             style="max-height: 100%"
@@ -77,7 +77,7 @@
         <!-- <div [ngxSummernoteView]="currentHtml"></div> -->
       </div>
 
-      <div *ngIf="tipoSectionAtiva == '2'">
+      <div *ngIf="tipoAbaAtiva == '2'">
         <div class="container-fluid mt-4 " style="display: flex; flex-direction: row; justify-content: flex-end;">
   
             <div 
@@ -117,7 +117,7 @@
                       <app-edit-procedure
                         (onDeleteProcedure)="deleteProcedures($event)"
                         (onEditProcedure)="editProcedures($event)"
-                        *ngFor="let slt of sectionProcedures; let i = index"
+                        *ngFor="let slt of abaProcedures; let i = index"
                         [index]="i"
                         [descricaoProcedure]="slt.descricao"
                         [titulo]="slt.titulo"
@@ -141,7 +141,7 @@
                     <app-edit-table
                       (onEditTable)="editTabelas($event)"
                       (onDeleteTable)="deleteTable($event)"
-                      *ngFor="let slt of sectionTables; let i = index"
+                      *ngFor="let slt of abaTables; let i = index"
                       [index]="i"
                       [descricaoTabela]="slt.descricao"
                       [titulo]="slt.titulo"
@@ -161,12 +161,12 @@
     </div>
     <div class="col-3">
 
-      <div *ngFor="let section of sections; let i = index" 
+      <div *ngFor="let aba of abas; let i = index" 
             class="border-bottom border-dark-subtle my-5"
             >
             <div style="display: flex;">
               <div 
-                (click)="copiarTexto('?to='+section.nome)" 
+                (click)="copiarTexto('?to='+aba.nome)" 
                 class="text-secondary hoverIcon mx-1" 
                 style="cursor: pointer;">
                   <i class="bi bi-link-45deg"></i>
@@ -179,12 +179,12 @@
               </div>
             </div>
         <div 
-            [ngClass]="{'border-bottom border-dark-subtle': sectionAtiva == i}"
-            (click)="selectSection(section, i)"
+            [ngClass]="{'border-bottom border-dark-subtle': abaAtiva == i}"
+            (click)="selectSection(aba, i)"
             class="container-fluid hoverIcon" 
             style="display: flex;justify-content: flex-end;border-color: #8BEE9B !important; cursor: pointer;">
           <h6 class="display-6" style="font-size: 12pt;"> 
-            {{ section.nome }}
+            {{ aba.nome }}
           </h6> 
         </div>
 
@@ -269,9 +269,9 @@
 
             <div class="mt-4">Abas Carregadas:</div>
             <ul class="list-group mx-3" style="height: 10rem; overflow: auto;">
-              <ng-container *ngFor="let section of sections">
-                <li *ngIf="section.changes == 1" class="list-group-item">
-                  {{ section.nome }}
+              <ng-container *ngFor="let aba of abas">
+                <li *ngIf="aba.changes == 1" class="list-group-item">
+                  {{ aba.nome }}
                 </li>
               </ng-container>
             </ul>
@@ -399,7 +399,7 @@
         </div>
         <div class="modal-body">
           <input
-            [(ngModel)]="sectionTableNameAtual"
+            [(ngModel)]="abaTableNameAtual"
             type="text"
             class="form-control"
             placeholder="Nome da Procedure*"
@@ -407,7 +407,7 @@
             aria-describedby="button-addon2"
           />
           <textarea
-            [(ngModel)]="sectionTableDescAtual"
+            [(ngModel)]="abaTableDescAtual"
             type="text"
             class="form-control mt-2"
             placeholder="Descrição"
@@ -464,7 +464,7 @@
         </div>
         <div class="modal-body">
           <input
-            [(ngModel)]="sectionTableNameAtual"
+            [(ngModel)]="abaTableNameAtual"
             type="text"
             class="form-control"
             placeholder="Nome da Tabela*"
@@ -472,7 +472,7 @@
             aria-describedby="button-addon2"
           />
           <textarea
-            [(ngModel)]="sectionTableDescAtual"
+            [(ngModel)]="abaTableDescAtual"
             type="text"
             class="form-control mt-2"
             placeholder="Descrição"
@@ -532,7 +532,7 @@
             >
             <input
               required
-              [(ngModel)]="nomeNovaSection"
+              [(ngModel)]="nomeNovaAba"
               type="text"
               class="form-control my-2"
               id="tituloNewSection"
@@ -544,7 +544,7 @@
             >
             <select
               required
-              [(ngModel)]="tipoNovaSection"
+              [(ngModel)]="tipoNovaAba"
               class="form-select my-2"
               id="selectNewSection"
               aria-label="Selecione um tipo"
@@ -579,7 +579,7 @@
 
 <div id="AllContent" hidden>
   <app-view-documentation
-    [sections]="loadDocumentacao.sections"
+    [abas]="loadDocumentacao.abas"
     [loadDocumentacao]="loadDocumentacao"
   ></app-view-documentation>
 </div>

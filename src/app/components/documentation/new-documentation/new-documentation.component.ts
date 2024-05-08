@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Documentation } from '../documentation';
+import { Documentation } from '../../../models/documentation';
 import { Router } from '@angular/router';
 import { LoginService } from '../../../services/login/login.service';
 import { DocumentationService } from '../../../services/api/documentation.service';
@@ -44,11 +44,12 @@ export class NewDocumentationComponent {
     }
 
     this.documentacaoModelo = new Documentation(
-      this.titulo
-      , this.loginService.getUser()
-      , this.descricao
+      {
+        titulo: this.titulo
+        , usuarioAlteracao: this.loginService.getUser()
+        , descricao: this.descricao
+      }
     )
-    this.documentacaoModelo.idUser = this.loginService.getUser().id
 
     if (this.selectedFile){
       this.documentacaoModelo.imagemCapa = this.selectedFile
@@ -74,6 +75,26 @@ export class NewDocumentationComponent {
 
   }
 
+  // addUserDocumentation(){
+    
+  //   const selectedUser = this.loginService.getUser()
+  //   let idUser = selectedUser.id
+
+
+  //   const retorno = this.documentationService.addUsersDocumentation(this.documentacaoModelo,idUser)
+  //   retorno.subscribe(
+  //     response=>{
+  //       console.log(response);
+  //     }
+  //     ,error=>{
+  //       console.log(error.error.status);
+
+  //       this.errorMessage = error.error.status
+        
+        
+  //     }
+  //   )
+  // }
 
 
 
@@ -92,5 +113,12 @@ export class NewDocumentationComponent {
       }
     });
   }
+
+
+  
+  goTo(path:any = '/'){
+    this.router.navigate([path])
+  }
+
 
 }

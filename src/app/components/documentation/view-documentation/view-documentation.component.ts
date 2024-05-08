@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { ScrollService } from '../../../services/scroll.service';
 import { StorageAcessService } from '../../../services/storage-acess.service';
 import { DownloadPageService } from '../../../services/download-page.service';
+import { Documentation } from '../../../models/documentation';
 
 @Component({
   selector: 'app-view-documentation',
@@ -11,8 +12,8 @@ import { DownloadPageService } from '../../../services/download-page.service';
 export class ViewDocumentationComponent implements OnInit{
 
 
-  @Input() sections:any[] = []
-  @Input() loadDocumentacao:any = this.storageAcessService.changeStorage()
+  @Input() abas:any[] = []
+  @Input() loadDocumentacao:Documentation = this.storageAcessService.changeStorage()
 
   caminhoAtual:any = location.href
   
@@ -44,15 +45,15 @@ export class ViewDocumentationComponent implements OnInit{
 
   reload(){
     this.loadDocumentacao=this.storageAcessService.changeStorage()
-    this.sections = this.loadDocumentacao.sections
+    this.abas = this.loadDocumentacao.abas
   }
  
   ngOnInit():void {
     this.loadDocumentacao=this.storageAcessService.changeStorage()
-    this.sections = this.loadDocumentacao.sections
+    this.abas = this.loadDocumentacao.abas
 
 
-    this.sections.map((value)=>{ 
+    this.abas.map((value)=>{ 
       
       if(value.tipo == 1){
         this.constTable = 1

@@ -53,7 +53,7 @@
                 <div class="col-md-12">
                     <div class="big-title text-center">
                         <h1>{{loadDocumentacao.titulo}}</h1>
-                        <p class="lead">{{loadDocumentacao.commitText}}</p>
+                        <p class="lead">{{loadDocumentacao.descricao}}</p>
                     </div>
                     <!-- end title -->
                 </div>
@@ -71,12 +71,12 @@
             <div class="col-md-3">
                 <nav class="docs-sidebar" data-spy="affix" data-offset-top="300" data-offset-bottom="200" role="navigation">
                     <ul class="nav" style="display: block;">
-                        <li *ngFor="let section of sections; let i = index" >
+                        <li *ngFor="let aba of abas; let i = index" >
                           <a 
                           style="cursor: pointer;"
-                          (click)="scrollToElement(section.nome)"
-                          [ariaLabel]="section.nome"
-                          >{{section.nome}}</a>
+                          (click)="scrollToElement(aba.nome)"
+                          [ariaLabel]="aba.nome"
+                          >{{aba.nome}}</a>
                         </li>
                         
                     </ul>
@@ -94,19 +94,19 @@
                                 <div class="col-md-12 full">
                                     <div class="intro1">
                                         <ul>
-                                            <li><strong>Versão : </strong> V {{loadDocumentacao.version}}</li>
-                                            <li><strong>Alterado por  : </strong> {{loadDocumentacao.user_alteracao.nome}}</li>
+                                            <li><strong>Versão : </strong> V {{loadDocumentacao.versao}}</li>
+                                            <li><strong>Alterado por  : </strong> {{loadDocumentacao.usuarioAlteracao.nome}}</li>
                                             <li><strong>Ultimas Atualizações : </strong> 
 
                                               <ul class="list-group my-2">
-                                                <ng-container *ngFor="let section of sections">
-                                                  <li *ngIf="section.changes == 1" class="list-group-item">
-                                                    {{ section.nome }}
+                                                <ng-container *ngFor="let aba of abas">
+                                                  <li *ngIf="aba.changes == 1" class="list-group-item">
+                                                    {{ aba.nome }}
                                                   </li>
                                                 </ng-container>
                                               </ul>
                                             </li>
-                                            <li><strong>Data Atualização : </strong> {{loadDocumentacao.dh_alteracao}}</li>
+                                            <li><strong>Data Atualização : </strong> {{loadDocumentacao.dataAlteracao}}</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -119,7 +119,7 @@
 
                 <!-- REPLICAR PARA CADA ABA -->
                 <section 
-                  *ngFor="let section of sections; let i = index"
+                  *ngFor="let section of abas; let i = index"
                   id="{{ section.nome }}"
                   class="section">
 

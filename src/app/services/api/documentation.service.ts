@@ -1,9 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { Documentation } from '../../components/documentation/documentation';
+import { Documentation } from '../../models/documentation';
 import { GlobalVariables } from '../../global-variables';
 import { User } from '../../models/user';
+import { LoginService } from '../login/login.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,8 @@ export class DocumentationService {
 
   constructor(
     private http: HttpClient,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private loginService: LoginService,
   ) { }
 
 
@@ -93,7 +95,7 @@ export class DocumentationService {
       })
     };
 
-    return this.http.post< any >(this.apiUrl+'/user/all',{"user":this.cookieService.get('user')}, httpOptions );
+    return this.http.post< any >(this.apiUrl+'/user/all',this.loginService.getUser(), httpOptions );
  
   }
 

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Documentation } from '../models/documentation';
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +47,7 @@ export class StorageAcessService {
     }
   }
  
-  updateStorage(loadDocumentacao:any){
+  updateStorage(loadDocumentacao:Documentation){
     localStorage.setItem('novaDocumentacao',JSON.stringify(loadDocumentacao))
   }
 

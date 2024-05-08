@@ -5,7 +5,7 @@ import { LoginService } from '../../services/login/login.service';
 import { DocumentationService } from '../../services/api/documentation.service';
 import { CookieService } from 'ngx-cookie-service';
 import { ImageService } from '../../services/image.service';
-import { Documentation } from '../documentation/documentation';
+import { Documentation } from '../../models/documentation';
 import { User } from '../../models/user';
 declare const bootstrap: any; 
 
@@ -19,14 +19,17 @@ export class HomeComponent implements OnInit {
 
   dropdownUsers:any 
 
-  documentationUserLists: any = []
-  documentationEdit:Documentation = new Documentation('',new User('','',''))
+  documentationUserLists: User[] = []
+  documentationEdit:Documentation = new Documentation({usuarioAlteracao:new User()})
 
   addUserDocumentationValue:any = ''
-  usersList:any = []
+  usersList:User[] = []
 
-  listDocumentations : any = []
+  listDocumentations : Documentation[] = []
   imagemPerfilSelecionada:any = undefined
+
+  acoesAcesso: any 
+
 
   errorMessage:any = ''
 
@@ -92,10 +95,10 @@ export class HomeComponent implements OnInit {
         let result: User[] = []
         response.forEach((element: any) => {
           let user = new User(
-              ''
-              ,''
-              ,element.nome
-            )
+              {
+                nome: element.nome
+              }
+          )
 
             user.funcao = element.funcao
             user.id = element.id
@@ -143,16 +146,6 @@ export class HomeComponent implements OnInit {
     
   }
 
-  separarTags(tag:string){
-    const arr = tag.split(';');
-    let finalArr:any = [];
-    arr.forEach((element)=>{
-
-      finalArr.push({'tagName':element.split(':')[0], 'tagColor':element.split(':')[1], 'TagId':element.split(':')[3] })
-    })
-
-    return finalArr
-  }
 
 
   deletarTagDocumentacao(idDoc:any,idTag:any){
@@ -206,10 +199,7 @@ export class HomeComponent implements OnInit {
   ngAfterViewInit(): void {
 
     const dropdownElement = document.querySelector('#dropDownUsers')
-    console.log(dropdownElement);
     const dropdownUsers = new bootstrap.Dropdown(dropdownElement)
-    console.log(dropdownUsers);
-
     this.dropdownUsers = dropdownUsers
     
   }
@@ -223,9 +213,10 @@ export class HomeComponent implements OnInit {
         
         response.map((value: any)=>{
             let user = new User(
-              value.login
-              ,''
-              ,value.nome
+              {
+                login: value.login
+                ,nome: value.nome
+              }
             )
             user.imagem = value.imagem
             user.id = value.id
@@ -248,24 +239,31 @@ export class HomeComponent implements OnInit {
         let docs:any =[]
         response.forEach((element: any) => {
           let doc = new Documentation(
-            element.titulo
-            , element.usuarioAlteracao
-            , element.descricao
-            , element.abas
-            , element.commitText
-            , []
-            , element.versao
-            , element.status
-            , element.dataAlteracao
+            {
+              titulo: element.titulo
+              , usuarioAlteracao: new User(element.usuarioAlteracao)
+              , descricao: element.descricao
+              , abas: element.abas
+              , commitText: element.commitText
+              , versao: element.versao
+              , status: element.status
+              , dataAlteracao: element.dataAlteracao
+              , imagemCapa: element.imagemCapa
+              , id: element.id
+              , tags: element.tags
+            }
           )
-          doc.id = element.id
-          doc.imagemCapa = element.imagemCapa
-          doc.tags = element.tags
+          const userDocumentationsAcess = this.loginService.getUser().projetos
+          if( element.id in userDocumentationsAcess){
+            doc.acessoUsuario = userDocumentationsAcess[element.id]          
+          }
           docs.push(doc)
           
         });
 
         this.listDocumentations = docs
+        console.log(this.listDocumentations);
+        
       },
       error => {
         console.log(error.error);

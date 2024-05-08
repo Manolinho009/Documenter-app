@@ -6,7 +6,7 @@ import { ViewDocumentationComponent } from '../view-documentation/view-documenta
 import { EditProcedureComponent } from './edit-procedure/edit-procedure.component';
 import { LoginService } from '../../../services/login/login.service';
 import { DocumentationService } from '../../../services/api/documentation.service';
-import { Documentation } from '../documentation';
+import { Documentation } from '../../../models/documentation';
 import { User } from '../../../models/user';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
@@ -35,23 +35,24 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
   
   @ViewChildren(EditTableComponent) editTableComponents!: QueryList<EditTableComponent>;
   @ViewChildren(EditProcedureComponent) editProcedureComponents!: QueryList<EditProcedureComponent>;
-  sectionTables:any[] = []
-  sectionProcedures:any[] = []
 
-  sectionTableNameAtual:any = ''
-  sectionTableDescAtual:any = ''
+  abaTables:any[] = []
+  abaProcedures:any[] = []
+
+  abaTableNameAtual:any = ''
+  abaTableDescAtual:any = ''
 
 
   documentationVersion:any = 0
   documentationTitle:any = ''
   documentationCommitText:any = ''
 
-  sectionAtiva:number = 9999
-  tipoSectionAtiva:any = ''
-  sections:any[] = []
+  abaAtiva:number = 9999
+  tipoAbaAtiva:any = ''
+  abas:any[] = []
 
-  tipoNovaSection:any = ''
-  nomeNovaSection:any = ''
+  tipoNovaAba:any = ''
+  nomeNovaAba:any = ''
   
   currentHtml:any = ''
   loadDocumentacao:Documentation
@@ -93,8 +94,7 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
     private router: Router
      ){
       this.loadDocumentacao = new Documentation(
-        undefined
-        ,this.loginService.getUser()
+        {usuarioAlteracao:this.loginService.getUser()}
     )
      }
 
@@ -132,8 +132,8 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
 
   limparCampos(){
     this.errorMessage = ''
-    this.tipoNovaSection = ''
-    this.nomeNovaSection = ''
+    this.tipoNovaAba = ''
+    this.nomeNovaAba = ''
   }
 
   goTo(path:any = '/'){
@@ -149,25 +149,25 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
     }
 
 
-    this.loadDocumentacao.sectionsChanges = []
+    this.loadDocumentacao.abasAlteradas = []
 
-    this.sections.forEach((sec,i)=>{
+    this.abas.forEach((sec,i)=>{
       
       if(sec.changes == 1){
-        this.loadDocumentacao.sectionsChanges.push(sec) 
+        this.loadDocumentacao.abasAlteradas.push(sec) 
         console.log(sec);
       }
 
-      this.sections[i].changes = 0
+      this.abas[i].changes = 0
 
     })
     
     this.documentationVersion += 1
-    this.loadDocumentacao.version = this.documentationVersion;
+    this.loadDocumentacao.versao = this.documentationVersion;
     this.loadDocumentacao.commitText = this.documentationCommitText
     this.loadDocumentacao.tags = this.tagsSelecionadas
     
-    console.log(this.loadDocumentacao.sectionsChanges);
+    console.log(this.loadDocumentacao.abasAlteradas);
     
     this.updateStorage()
 
@@ -206,44 +206,44 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
   }
 
   deleteSection(sectionId:any){
-    this.sections.splice(sectionId, 1);
-    this.loadDocumentacao.sections = this.sections
+    this.abas.splice(sectionId, 1);
+    this.loadDocumentacao.abas = this.abas
     this.updateStorage()
 
-    if(this.sections.length > 0){
-      this.selectSection(this.sections[0],0)
+    if(this.abas.length > 0){
+      this.selectSection(this.abas[0],0)
     }else{
-      this.sectionAtiva = 9999
-      this.tipoSectionAtiva = ''
+      this.abaAtiva = 9999
+      this.tipoAbaAtiva = ''
     }
   }
 
   createSection(){
 
-    if (this.nomeNovaSection == '') {
+    if (this.nomeNovaAba == '') {
       this.errorMessage = 'Preencha o campo: Titulo'
       return
     }
-    if (this.tipoNovaSection == '') {
+    if (this.tipoNovaAba == '') {
       this.errorMessage = 'Selecione um Tipo'
       return
     }
 
     const novaSection = {
-      tipo: this.tipoNovaSection
-      , nome: this.nomeNovaSection
+      tipo: this.tipoNovaAba
+      , nome: this.nomeNovaAba
       , html:''
       , tables:[]
       , procedures:[]
       , changes:1
     }
-    const index = this.sections.length
+    const index = this.abas.length
 
-    this.sections.push(novaSection)
+    this.abas.push(novaSection)
 
     this.selectSection(novaSection,index)
 
-    this.loadDocumentacao.sections = this.sections
+    this.loadDocumentacao.abas = this.abas
     this.updateStorage()
     this.limparCampos()
 
@@ -252,12 +252,12 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
 
 
   selectSection(section:any,index:number ){
-    this.sectionAtiva = index;
+    this.abaAtiva = index;
     this.currentHtml = section.nome+' - '+section.html;
     this.conteudoEditor = section.html
-    this.tipoSectionAtiva = section.tipo
-    this.sectionTables = section.tables
-    this.sectionProcedures = section.procedures
+    this.tipoAbaAtiva = section.tipo
+    this.abaTables = section.tables
+    this.abaProcedures = section.procedures
   }
 
 
@@ -266,58 +266,58 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
     this.currentHtml = event
     this.conteudoEditor = event
 
-    const ativa = this.sectionAtiva
+    const ativa = this.abaAtiva
 
-    this.sections[ativa].html = event
-    this.sections[ativa].tables = this.sectionTables
-    this.sections[ativa].procedures = this.sectionProcedures
-    this.sections[ativa].changes = 1
+    this.abas[ativa].html = event
+    this.abas[ativa].tables = this.abaTables
+    this.abas[ativa].procedures = this.abaProcedures
+    this.abas[ativa].changes = 1
 
-    this.loadDocumentacao.sections = this.sections
+    this.loadDocumentacao.abas = this.abas
 
     this.updateStorage()
   }
 
   deleteTable(index:any){
     
-    const ativa = this.sectionAtiva
-    this.sectionTables.splice(index,1)
+    const ativa = this.abaAtiva
+    this.abaTables.splice(index,1)
 
-    this.sections[ativa].tables = this.sectionTables
-    this.sections[ativa].changes = 1
+    this.abas[ativa].tables = this.abaTables
+    this.abas[ativa].changes = 1
 
-    this.loadDocumentacao.sections = this.sections
+    this.loadDocumentacao.abas = this.abas
     this.updateStorage()  }
 
   deleteProcedures(index:any){
     console.log(index);
     
-    const ativa = this.sectionAtiva
-    this.sectionProcedures.splice(index,1)
+    const ativa = this.abaAtiva
+    this.abaProcedures.splice(index,1)
 
-    this.sections[ativa].procedures = this.sectionProcedures
-    this.sections[ativa].changes = 1
+    this.abas[ativa].procedures = this.abaProcedures
+    this.abas[ativa].changes = 1
 
-    this.loadDocumentacao.sections = this.sections
+    this.loadDocumentacao.abas = this.abas
     this.updateStorage()  }
 
   addTabela(){
     const now = new Date();
     
-    this.sectionTables.push(
+    this.abaTables.push(
       {
         colunas:[],
-        titulo:this.sectionTableNameAtual,
-        descricao:this.sectionTableDescAtual,
-        dh_alteracao: now.toLocaleString()
+        titulo:this.abaTableNameAtual,
+        descricao:this.abaTableDescAtual,
+        dataAlteracao: now.toLocaleString()
       }
     )
 
-    const ativa = this.sectionAtiva
-    this.sections[ativa].tables = this.sectionTables
-    this.sections[ativa].changes = 1
+    const ativa = this.abaAtiva
+    this.abas[ativa].tables = this.abaTables
+    this.abas[ativa].changes = 1
 
-    this.loadDocumentacao.sections = this.sections
+    this.loadDocumentacao.abas = this.abas
 
     this.updateStorage()
 
@@ -325,20 +325,20 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
   addProcedure(){
     const now = new Date();
     
-    this.sectionProcedures.push(
+    this.abaProcedures.push(
       {
         params:[],
-        titulo:this.sectionTableNameAtual,
-        descricao:this.sectionTableDescAtual,
-        dh_alteracao: now.toLocaleString()
+        titulo:this.abaTableNameAtual,
+        descricao:this.abaTableDescAtual,
+        dataAlteracao: now.toLocaleString()
       }
     )
 
-    const ativa = this.sectionAtiva
-    this.sections[ativa].procedures = this.sectionProcedures
-    this.sections[ativa].changes = 1
+    const ativa = this.abaAtiva
+    this.abas[ativa].procedures = this.abaProcedures
+    this.abas[ativa].changes = 1
 
-    this.loadDocumentacao.sections = this.sections
+    this.loadDocumentacao.abas = this.abas
 
     this.updateStorage()
 
@@ -351,20 +351,20 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
     this.editTableComponents.forEach(editTableComponent => {
       
       if( editTableComponent.index == table.index ) {
-        console.log(this.sectionTables);
+        console.log(this.abaTables);
         
-        this.sectionTables[editTableComponent.index].descricao = table.descricaoTabela
-        this.sectionTables[editTableComponent.index].titulo = table.titulo
-        this.sectionTables[editTableComponent.index].colunas = table.colunas
-        this.sectionTables[editTableComponent.index].dh_alteracao = table.dh_alteracao
+        this.abaTables[editTableComponent.index].descricao = table.descricaoTabela
+        this.abaTables[editTableComponent.index].titulo = table.titulo
+        this.abaTables[editTableComponent.index].colunas = table.colunas
+        this.abaTables[editTableComponent.index].dataAlteracao = table.dataAlteracao
       }
     });
 
-    const ativa = this.sectionAtiva
-    this.sections[ativa].tables = this.sectionTables
-    this.sections[ativa].changes = 1
+    const ativa = this.abaAtiva
+    this.abas[ativa].tables = this.abaTables
+    this.abas[ativa].changes = 1
 
-    this.loadDocumentacao.sections = this.sections
+    this.loadDocumentacao.abas = this.abas
 
     this.updateStorage()
   }
@@ -373,15 +373,15 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
   //   console.log(params);
   //   // ===
   //   this.editProcedureComponents.forEach(editProcedureComponent => {
-  //     this.sectionProcedures[editProcedureComponent.index].params = params
+  //     this.abaProcedures[editProcedureComponent.index].params = params
   //   });
 
     
-  //   const ativa = this.sectionAtiva
-  //   this.sections[ativa].procedures = this.sectionProcedures
-  //   this.sections[ativa].changes = 1
+  //   const ativa = this.abaAtiva
+  //   this.abas[ativa].procedures = this.abaProcedures
+  //   this.abas[ativa].changes = 1
 
-  //   this.loadDocumentacao.sections = this.sections
+  //   this.loadDocumentacao.abas = this.abas
 
   //   this.updateStorage()
   // }
@@ -393,19 +393,19 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
     this.editProcedureComponents.forEach(editProcedureComponent => {
       
       if( editProcedureComponent.index == procedure.index ) {
-        this.sectionProcedures[editProcedureComponent.index].descricao = procedure.descricaoProcedure
-        this.sectionProcedures[editProcedureComponent.index].params = procedure.params
-        this.sectionProcedures[editProcedureComponent.index].titulo = procedure.titulo
-        this.sectionProcedures[editProcedureComponent.index].dh_alteracao = procedure.dh_alteracao
+        this.abaProcedures[editProcedureComponent.index].descricao = procedure.descricaoProcedure
+        this.abaProcedures[editProcedureComponent.index].params = procedure.params
+        this.abaProcedures[editProcedureComponent.index].titulo = procedure.titulo
+        this.abaProcedures[editProcedureComponent.index].dataAlteracao = procedure.dataAlteracao
       }
     });
 
     
-    const ativa = this.sectionAtiva
-    this.sections[ativa].procedures = this.sectionProcedures
-    this.sections[ativa].changes = 1
+    const ativa = this.abaAtiva
+    this.abas[ativa].procedures = this.abaProcedures
+    this.abas[ativa].changes = 1
 
-    this.loadDocumentacao.sections = this.sections
+    this.loadDocumentacao.abas = this.abas
 
     this.updateStorage()
   }
@@ -413,8 +413,8 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
 
 
   updateStorage(){
-    this.loadDocumentacao.dh_alteracao = new Date().toLocaleString()
-    this.loadDocumentacao.user_alteracao = this.loginService.getUser()
+    this.loadDocumentacao.dataAlteracao = new Date().toLocaleString()
+    this.loadDocumentacao.usuarioAlteracao = this.loginService.getUser()
     
     this.storageAcessService.updateStorage(this.loadDocumentacao)
     this.storageAcessService.addDocumentationList(this.loadDocumentacao)
@@ -461,22 +461,24 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
 
     
     this.loadDocumentacao = new Documentation(
-      loadDocumentacaoStorage.titulo,
-      this.loginService.getUser(),
-      loadDocumentacaoStorage.descricao,
-      loadDocumentacaoStorage.sections,
-      loadDocumentacaoStorage.commitText,
-      loadDocumentacaoStorage.sectionsChanges,
-      loadDocumentacaoStorage.versao,
-      loadDocumentacaoStorage.status,
-      loadDocumentacaoStorage.dh_alteracao,
+      {
+        titulo: loadDocumentacaoStorage.titulo
+        ,usuarioAlteracao: this.loginService.getUser()
+        ,descricao: loadDocumentacaoStorage.descricao
+        ,abas: loadDocumentacaoStorage.abas
+        ,commitText: loadDocumentacaoStorage.commitText
+        ,abasAlteradas: loadDocumentacaoStorage.abasAlteradas
+        ,versao: loadDocumentacaoStorage.versao
+        ,status: loadDocumentacaoStorage.status
+        ,dataAlteracao: loadDocumentacaoStorage.dataAlteracao
+      }
       
     )
     
     this.loadDocumentacao.imagemCapa = loadDocumentacaoStorage.imagemCapa
-    this.sections = this.loadDocumentacao.sections
+    this.abas = this.loadDocumentacao.abas
     this.documentationTitle = this.loadDocumentacao.titulo
-    this.documentationVersion = parseFloat(this.loadDocumentacao.version)
+    this.documentationVersion = parseFloat(this.loadDocumentacao.versao)
 
 
     this.carregarTags()
