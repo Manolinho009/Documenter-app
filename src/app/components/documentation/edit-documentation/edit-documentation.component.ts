@@ -9,7 +9,7 @@ import { DocumentationService } from '../../../services/api/documentation.servic
 import { Documentation } from '../../../models/documentation';
 import { User } from '../../../models/user';
 import { CookieService } from 'ngx-cookie-service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TagService } from '../../../services/api/tag.service';
 import { Tag } from '../../../models/tag';
 declare const bootstrap: any; 
@@ -67,6 +67,14 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
     tabsize: 2,
     height: 200,
     uploadImagePath: '/api/upload',
+    options:{
+      maximumImageFileSize: 500*1024,
+      callbacks:{
+        onImageUploadError: function(msg:any){
+           console.log(msg + ' (1 MB)');
+        }
+      },
+    },
     toolbar: [
         ['misc', ['codeview', 'undo', 'redo']],
         ['style', ['bold', 'italic', 'underline', 'clear']],
@@ -91,7 +99,8 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
     private documentationService:DocumentationService,
     private tagService:TagService,
     private cookieService: CookieService,
-    private router: Router
+    private router: Router,
+    private thisRoute: ActivatedRoute
      ){
       this.loadDocumentacao = new Documentation(
         {usuarioAlteracao:this.loginService.getUser()}
@@ -457,31 +466,57 @@ export class EditDocumentationComponent implements OnInit, AfterViewInit{
   }
 
   ngOnInit(): void {
-    const loadDocumentacaoStorage = this.storageAcessService.changeStorage()
 
-    
-    this.loadDocumentacao = new Documentation(
-      {
-        titulo: loadDocumentacaoStorage.titulo
-        ,usuarioAlteracao: this.loginService.getUser()
-        ,descricao: loadDocumentacaoStorage.descricao
-        ,abas: loadDocumentacaoStorage.abas
-        ,commitText: loadDocumentacaoStorage.commitText
-        ,abasAlteradas: loadDocumentacaoStorage.abasAlteradas
-        ,versao: loadDocumentacaoStorage.versao
-        ,status: loadDocumentacaoStorage.status
-        ,dataAlteracao: loadDocumentacaoStorage.dataAlteracao
-      }
+    // const loadDocumentacaoStorage = this.storageAcessService.changeStorage()
+
+    // this.loadDocumentacao = new Documentation(
+    //   {
+    //     titulo: loadDocumentacaoStorage.titulo
+    //     ,usuarioAlteracao: this.loginService.getUser()
+    //     ,descricao: loadDocumentacaoStorage.descricao
+    //     ,abas: loadDocumentacaoStorage.abas
+    //     ,commitText: loadDocumentacaoStorage.commitText
+    //     ,abasAlteradas: loadDocumentacaoStorage.abasAlteradas
+    //     ,versao: loadDocumentacaoStorage.versao
+    //     ,status: loadDocumentacaoStorage.status
+    //     ,dataAlteracao: loadDocumentacaoStorage.dataAlteracao
+    //   }
       
-    )
-    
-    this.loadDocumentacao.imagemCapa = loadDocumentacaoStorage.imagemCapa
-    this.abas = this.loadDocumentacao.abas
-    this.documentationTitle = this.loadDocumentacao.titulo
-    this.documentationVersion = parseFloat(this.loadDocumentacao.versao)
+    // )
+
+    this.thisRoute.params.subscribe(params => {
+      let id = params['id'];
+      console.log(id, 'catapimbas');
+      
+
+      const retorno = this.documentationService.getDocumentation(new Documentation({id: id}));
+      retorno.subscribe(
+        response=>{
+
+          console.log(response, 'carambolas');
+          
+          this.loadDocumentacao = new Documentation(
+            response
+          )
+
+          
+        this.loadDocumentacao.imagemCapa = this.loadDocumentacao.imagemCapa
+        this.abas = this.loadDocumentacao.abas
+        this.documentationTitle = this.loadDocumentacao.titulo
+        this.documentationVersion = isNaN( parseFloat(this.loadDocumentacao.versao) ) ? 0 : parseFloat(this.loadDocumentacao.versao) 
 
 
-    this.carregarTags()
+        this.carregarTags()
+          // loadDocumentacaoStorage = response
+        },
+        error=>{
+          alert(error.error.status)
+          this.goTo()
+        }
+      )
+      
+
+    });
   }
 
   

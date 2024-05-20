@@ -23,7 +23,16 @@ export class StorageAcessService {
   }
   
   setValue(key:string, value:any){
-    localStorage.setItem(key,JSON.stringify(value))
+    try {
+      localStorage.setItem(key,JSON.stringify(value))
+    } catch(e:any) {
+      if (e.code === 22) {
+        console.log('Local Storage está cheio');
+      }
+    }
+
+
+    
   }
 
   addDocumentationList(documentation:any){
@@ -31,8 +40,13 @@ export class StorageAcessService {
 
     docs[documentation.titulo] = documentation
 
-    localStorage.setItem('listaDocumentacoes',JSON.stringify(docs))
-
+    try {
+      localStorage.setItem('listaDocumentacoes',JSON.stringify(docs))
+    } catch(e:any) {
+      if (e.code === 22) {
+        console.log('Local Storage está cheio');
+      }
+    }
   }
 
   listDocumentations(){
@@ -48,7 +62,13 @@ export class StorageAcessService {
   }
  
   updateStorage(loadDocumentacao:Documentation){
-    localStorage.setItem('novaDocumentacao',JSON.stringify(loadDocumentacao))
+    try {
+      localStorage.setItem('novaDocumentacao',JSON.stringify(loadDocumentacao))
+    } catch(e:any) {
+      if (e.code === 22) {
+        console.log('Local Storage está cheio');
+      }
+    }
   }
 
   changeStorage(){

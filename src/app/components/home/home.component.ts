@@ -122,7 +122,9 @@ export class HomeComponent implements OnInit {
 
   carregarDocumentacao(documentation:Documentation){
     this.storageAcessService.updateStorage(documentation)
-    this.router.navigate(['/documentation/edit'])
+    console.log(documentation);
+    
+    this.router.navigate(['/documentation/edit', {id:documentation.id}])
   }
 
 

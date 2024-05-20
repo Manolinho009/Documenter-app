@@ -3,6 +3,8 @@ import { ScrollService } from '../../../services/scroll.service';
 import { StorageAcessService } from '../../../services/storage-acess.service';
 import { DownloadPageService } from '../../../services/download-page.service';
 import { Documentation } from '../../../models/documentation';
+import { DocumentationService } from '../../../services/api/documentation.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-view-documentation',
@@ -24,7 +26,9 @@ export class ViewDocumentationComponent implements OnInit{
   constructor(
     private scrollService: ScrollService, 
     private storageAcessService:StorageAcessService,
-    private changeDetectorRef:ChangeDetectorRef
+    private changeDetectorRef:ChangeDetectorRef,
+    private documentationService:DocumentationService,
+    private thisRoute: ActivatedRoute
     ) { }
   
 
@@ -49,19 +53,44 @@ export class ViewDocumentationComponent implements OnInit{
   }
  
   ngOnInit():void {
-    this.loadDocumentacao=this.storageAcessService.changeStorage()
-    this.abas = this.loadDocumentacao.abas
 
-
-    this.abas.map((value)=>{ 
-      
-      if(value.tipo == 1){
-        this.constTable = 1
-      }
-      if(value.tipo == 2){
-        this.constProc = 1
-      }
     
+    this.thisRoute.params.subscribe(params => {
+      let id = params['id'];
+      console.log(id, 'catapimbas');
+      
+      const retorno = this.documentationService.getDocumentation(new Documentation({id: id}));
+        retorno.subscribe(
+          response=>{
+
+            console.log(response, 'carambolas');
+            
+            this.loadDocumentacao = new Documentation(
+              response
+            )
+
+          
+            this.loadDocumentacao=this.storageAcessService.changeStorage()
+            this.abas = this.loadDocumentacao.abas
+
+
+            this.abas.map((value)=>{ 
+              
+              if(value.tipo == 1){
+                this.constTable = 1
+              }
+              if(value.tipo == 2){
+                this.constProc = 1
+              }
+            
+            });
+            // loadDocumentacaoStorage = response
+          },
+          error=>{
+            console.log(error, 'carambolas');
+
+          }
+        )
     });
   };
     

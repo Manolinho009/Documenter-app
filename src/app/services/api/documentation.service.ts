@@ -39,6 +39,7 @@ export class DocumentationService {
     
     return this.http.post<any>(this.apiUrl+'/user/add', {'documentation':documentation, 'idUser':user}, httpOptions);
   }
+
   selectUsersDocumentation(documentation:Documentation){
     const httpOptions = {
       headers: new HttpHeaders({
@@ -96,6 +97,18 @@ export class DocumentationService {
     };
 
     return this.http.post< any >(this.apiUrl+'/user/all',this.loginService.getUser(), httpOptions );
+ 
+  }
+
+  getDocumentation(documentation:Documentation){
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': this.cookieService.get('token')
+      })
+    };
+
+    return this.http.post< any >(this.apiUrl+'/get/'+documentation.id,this.loginService.getUser(), httpOptions );
  
   }
 
